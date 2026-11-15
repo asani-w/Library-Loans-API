@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LibraryLoansApplication<library-loans>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.library_loans.LibraryLoansApplication",
+            "projectName": "library-loans",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
