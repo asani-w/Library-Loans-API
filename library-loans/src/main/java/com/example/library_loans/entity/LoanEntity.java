@@ -13,10 +13,11 @@ public class LoanEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
+
     private Integer bookId;
     private Integer borrowerId;
-    @CreationTimestamp 
 
+    @CreationTimestamp 
     @Column(updatable=false)
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime dateBorrowed;
@@ -28,9 +29,9 @@ public class LoanEntity {
     public Integer getId(){ return id;}
     public Integer getBookId(){return bookId;}
     public void setBookId(Integer bookId){this.bookId=bookId;}
-    public Integer getborrowerId(){return borrowerId;}
+    public Integer getBorrowerId(){return borrowerId;}
     public void setBorrowerId(Integer borrowerId){this.borrowerId=borrowerId;}
-    public LocalDateTime getdateBorrowed(){return dateBorrowed;}
+    public LocalDateTime getDateBorrowed(){return dateBorrowed;}
     public LocalDateTime getDateDue(){return dateDue;}
     public void setDateDue(LocalDateTime dateDue){this.dateDue=dateDue;}
 

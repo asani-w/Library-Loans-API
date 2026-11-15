@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+
+
 @RequestMapping ("/api/Loans")
 @RestController 
 public class LoanController {
@@ -37,6 +39,7 @@ public class LoanController {
     public LoanEntity create(@RequestBody LoanEntity loan){
         return loanService.createLoan(loan);
     }
+    
     
     
 }

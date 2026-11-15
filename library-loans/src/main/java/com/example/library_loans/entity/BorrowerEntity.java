@@ -16,7 +16,9 @@ public class BorrowerEntity {
     private Integer id;
     private String firstName;
     private String lastName;
-    
+    private String email;
+    private String telephoneNumber;
+
     @CreationTimestamp 
     @Column(updatable=false)
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
@@ -30,4 +32,8 @@ public class BorrowerEntity {
     public String getLastName(){return lastName;}
     public void setLastName(String lastName){this.lastName=lastName;}
     public LocalDateTime getDateCreated(){return dateCreated;}
+    public String getEmail(){return email;}
+    public void setEmail(String email){this.email=email;}
+    public String getTelephoneNumber(){return telephoneNumber;}
+    public void setTelephoneNumber(String telephoneNumber){this.telephoneNumber=telephoneNumber;}
 }
