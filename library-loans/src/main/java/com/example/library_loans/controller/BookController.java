@@ -35,10 +35,28 @@ public class BookController {
         return bookService.getBookById(id);
     }
     
+    @GetMapping("/title/{title}")
+    public List<BookEntity> getBookByTitle(@PathVariable String title){
+        return bookService.getBookByTitle(title);
+    }
+    /*
+    @GetMapping("/category/{cat}")
+    public List<BookEntity>getBookByCategory(@PathVariable String cat){
+        return bookService.getBookByCategory(cat);
+    }
+    @GetMapping("/dateadded/{date}")
+    public List<BookEntity> getBookByDateAdded(@PathVariable date){
+        return bookService.getBookByDateAdded(date);
+    }
+    */
+    @GetMapping("/source/{source}")
+    public List<BookEntity> getBookBySource(@PathVariable String source){
+        return bookService.getBookBySource(source);
+    }
     @PostMapping
     public BookEntity create(@RequestBody BookEntity book) {
         return bookService.createBook(book);
     }
     
-    
+   
 }
