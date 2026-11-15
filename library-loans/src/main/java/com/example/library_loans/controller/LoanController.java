@@ -7,6 +7,7 @@ import com.example.library_loans.service.LoanService;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +65,10 @@ public class LoanController {
         return loanService.createLoan(loan);
     }
     
+    @DeleteMapping("/{id}")
+    public LoanEntity deleteLoan(@PathVariable Integer id){
+        return loanService.deleteLoan(id);
+    }
     
-    
+
 }

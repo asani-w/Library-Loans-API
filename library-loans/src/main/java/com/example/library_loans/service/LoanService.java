@@ -54,7 +54,16 @@ public class LoanService {
     public List<LoanEntity> getLoanByDateDue(LocalDateTime dateDue){
         return loanRepository.findByDateDue(dateDue);
     }
-    
+
+    public LoanEntity deleteLoan(Integer id){
+        Optional<LoanEntity> loan = getLoanById(id);
+        LoanEntity record=loan.get();
+        loanRepository.delete(record);
+        return record;
+        
+
+        
+    }
 
 }
 

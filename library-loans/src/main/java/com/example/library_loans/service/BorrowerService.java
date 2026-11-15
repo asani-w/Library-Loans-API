@@ -1,6 +1,7 @@
 package com.example.library_loans.service;
 
 import java.util.Optional;
+import java.lang.foreign.Linker.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,4 +52,10 @@ public class BorrowerService {
         return borrowerRepository.findByDateCreated(date);
     }
 
+    public BorrowerEntity deleteBorrower(Integer id){
+        Optional<BorrowerEntity> borrower = getBorrowerById(id);
+        BorrowerEntity record= borrower.get();
+        borrowerRepository.delete(record);
+        return record;
+    }
 }

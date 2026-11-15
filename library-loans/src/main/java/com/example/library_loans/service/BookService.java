@@ -44,4 +44,11 @@ public class BookService {
     public List<BookEntity> getBookBySource(String source){
         return bookRepository.findBySource(source);
     }
+
+    public BookEntity deleteBook(Integer id){
+        Optional<BookEntity> book= getBookById(id);
+        BookEntity record=book.get();
+        bookRepository.delete(record);
+        return record;
+    }
 }

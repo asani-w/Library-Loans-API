@@ -1,9 +1,9 @@
 package com.example.library_loans.controller;
 
-import com.example.library_loans.repository.BorrowerRepository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,17 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController 
 public class BorrowerController {
     
-    private final BorrowerRepository borrowerRepository;
     private final BorrowerService borrowerService;
 
-    public BorrowerController(BorrowerService borrowerService, BorrowerRepository borrowerRepository){
+    public BorrowerController(BorrowerService borrowerService){
         this.borrowerService=borrowerService;
-        this.borrowerRepository = borrowerRepository;
     }
 
     @GetMapping("/")
     public List<BorrowerEntity> getAllBorrowers(){
-        return borrowerRepository.findAll();
+        return borrowerService.getBorrowers();
     }
 
     @GetMapping("/id/{id}")
@@ -60,12 +58,16 @@ public class BorrowerController {
     public List<BorrowerEntity>getBorrowerByTitle(@PathVariable String title){
         return borrowerService.getBorrowerByFirstName(title)
     }
-        
+
      */
 
     @PostMapping
     public BorrowerEntity create(@RequestBody BorrowerEntity borrower){
         return borrowerService.createBorrower(borrower);
+    }
+    @DeleteMapping ("/{id}")
+    public BorrowerEntity delete(@PathVariable Integer id){
+        return borrowerService.deleteBorrower(id);
     }
 }
 
