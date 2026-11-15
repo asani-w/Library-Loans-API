@@ -24,6 +24,15 @@ public class BorrowerEntity {
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime dateCreated;
 
+    public enum MembershipStatus {
+        Active,
+        Expired,
+        Suspended
+    }
+
+    @Enumerated (EnumType.STRING)
+    private MembershipStatus MembershipStatus;
+
     public BorrowerEntity(){}
 
     public Integer getId(){return id;}
@@ -36,4 +45,7 @@ public class BorrowerEntity {
     public void setEmail(String email){this.email=email;}
     public String getTelephoneNumber(){return telephoneNumber;}
     public void setTelephoneNumber(String telephoneNumber){this.telephoneNumber=telephoneNumber;}
+    public MembershipStatus getMembershipStatus(){return MembershipStatus;}
+    public void setMembershipStatus(MembershipStatus membershipStatus){this.MembershipStatus=membershipStatus;}
+
 }

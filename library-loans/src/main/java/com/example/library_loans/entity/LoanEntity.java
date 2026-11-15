@@ -24,6 +24,16 @@ public class LoanEntity {
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime dateDue;
 
+     public enum LoanStatus{
+        Pending_Return,
+        Returned,
+        Unreturned
+    }
+
+    @Enumerated(EnumType.STRING)
+    private LoanStatus loanStatus;
+
+
     public LoanEntity(){}
 
     public Integer getId(){ return id;}
@@ -34,8 +44,14 @@ public class LoanEntity {
     public LocalDateTime getDateBorrowed(){return dateBorrowed;}
     public LocalDateTime getDateDue(){return dateDue;}
     public void setDateDue(LocalDateTime dateDue){this.dateDue=dateDue;}
+    public LoanStatus getLoanStatus() {return loanStatus;}
+    public void setLoanStatus(LoanStatus loanStatus){this.loanStatus=loanStatus;}
+
+    
+        
+    }
 
 
 
     
-}
+

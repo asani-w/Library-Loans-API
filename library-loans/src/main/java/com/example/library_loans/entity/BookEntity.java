@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,6 +27,25 @@ public class BookEntity{
     private LocalDateTime dateAdded;
     private String source;
 
+    public enum BookStatus{
+        Borrowed,
+        Available,
+        Removed   
+    }
+
+    @Enumerated (EnumType.STRING)
+    public BookStatus bookStatus;
+
+    public enum BookCondition{
+        New,
+        Excellent,
+        Acceptable,
+        Poor
+    }
+
+    @Enumerated (EnumType.STRING)
+    public BookCondition bookCondition;
+
     public BookEntity() {}
 
     public Integer getId() {return id;}
@@ -35,5 +56,9 @@ public class BookEntity{
     public LocalDateTime getDateAdded(){return dateAdded;}
     public String getSource(){return source;}
     public void setSource(String source){this.source=source;}
-
+    public BookCondition getBookCondition(){return bookCondition;}
+    public void setBookCondition(BookCondition bookCondition){this.bookCondition=bookCondition;}
+    public BookStatus getBookStatus(){return bookStatus;}
+    public void setBookStatus(BookStatus bookStatus){this.bookStatus=bookStatus;}
 }
+
