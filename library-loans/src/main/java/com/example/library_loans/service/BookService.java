@@ -1,6 +1,7 @@
 package com.example.library_loans.service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class BookService {
 
     public BookService(BookRepository bookRepository){
         this.bookRepository=bookRepository;
+    }
+    
+    public List<BookEntity> getBooks(){
+        return bookRepository.findAll();
     }
     
     public Optional<BookEntity> getBookById(Integer id){

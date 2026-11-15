@@ -2,6 +2,7 @@ package com.example.library_loans.service;
 
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class LoanService {
         this.loanRepository=loanRepository;
         this.borrowerRepository=borrowerRepository;
         this.bookRepository=bookRepository;
+    }
+
+
+    public List<LoanEntity> getLoans(){
+        return loanRepository.findAll();
     }
 
     public Optional<LoanEntity> getLoanById(Integer id){ 

@@ -1,6 +1,7 @@
 package com.example.library_loans.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,10 @@ public class BorrowerService {
 
     public BorrowerService(BorrowerRepository borrowerRepository){
         this.borrowerRepository=borrowerRepository;
+    }
+
+    public List<BrorrowerEntity> getBorrowers(){
+        return borrowerRepository.findAll();
     }
 
     public Optional<BrorrowerEntity> getBorrowerById(Integer id){
