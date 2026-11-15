@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_loans.entity.BrorrowerEntity;
 import com.example.library_loans.service.BorrowerService;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RequestMapping ("/api/Borrowers")
 @RestController 
@@ -32,6 +35,11 @@ public class BorrowerController {
     @GetMapping("/{id}")
     public Optional<BrorrowerEntity> getBorrowerById(@PathVariable Integer id){
         return borrowerService.getBorrowerById(id);
+    }
+
+    @PostMapping
+    public BrorrowerEntity create(@RequestBody BrorrowerEntity borrower){
+        return borrowerService.createBorrower(borrower);
     }
 }
 

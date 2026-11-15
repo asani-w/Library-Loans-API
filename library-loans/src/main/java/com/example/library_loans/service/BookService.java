@@ -22,12 +22,12 @@ public class BookService {
     public List<BookEntity> getBooks(){
         return bookRepository.findAll();
     }
-    
+
     public Optional<BookEntity> getBookById(Integer id){
         return bookRepository.findById(id);
     }
 
-    public BookEntity saveBorrower(BookEntity borrow){
+    public BookEntity createBook(BookEntity borrow){
         return bookRepository.save(borrow);
     }
 }
