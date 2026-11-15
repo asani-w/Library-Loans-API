@@ -32,10 +32,36 @@ public class BorrowerController {
         return borrowerRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Optional<BorrowerEntity> getBorrowerById(@PathVariable Integer id){
         return borrowerService.getBorrowerById(id);
     }
+
+    @GetMapping("/firstName/{fname}")
+    public List<BorrowerEntity>getBorrowerByFirstName(@PathVariable String fname){
+        return borrowerService.getBorrowerByFirstName(fname);
+    }
+
+    @GetMapping("/lastName/{lname}")
+    public List<BorrowerEntity>getBorrowerByLastName(@PathVariable String lname){
+        return borrowerService.getBorrowerByLastName(lname);
+    }
+    @GetMapping("/email/{email}")
+    public List<BorrowerEntity>getBorrowerByEmail(@PathVariable String email){
+        return borrowerService.getBorrowerByEmail(email);
+    }
+    @GetMapping("/telephone/{tel}")
+    public List<BorrowerEntity>getBorrowerByTelephoneNumber(@PathVariable String tel){
+        return borrowerService.getBorrowerByTelephoneNumber(tel);
+    }
+    /*
+
+    @GetMapping("/dateCreated/{date}")
+    public List<BorrowerEntity>getBorrowerByTitle(@PathVariable String title){
+        return borrowerService.getBorrowerByFirstName(title)
+    }
+        
+     */
 
     @PostMapping
     public BorrowerEntity create(@RequestBody BorrowerEntity borrower){

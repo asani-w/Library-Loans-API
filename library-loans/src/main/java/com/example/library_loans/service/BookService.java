@@ -1,6 +1,7 @@
 package com.example.library_loans.service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,5 +30,18 @@ public class BookService {
 
     public BookEntity createBook(BookEntity book){
         return bookRepository.save(book);
+    }
+
+    public List<BookEntity> getBookByTitle(String title){
+        return bookRepository.findByTitle(title);
+    }
+    public List<BookEntity> getBookByCategory(String category){
+        return bookRepository.findByCategory(category);
+    }
+    public List<BookEntity> getBookByDateAdded(LocalDateTime dateAdded){
+        return bookRepository.findByDateAdded(dateAdded);
+    }
+    public List<BookEntity> getBookBySource(String source){
+        return bookRepository.findBySource(source);
     }
 }

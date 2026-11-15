@@ -40,5 +40,21 @@ public class LoanService {
         return loanRepository.save(loan);   
     }
 
+    public List<LoanEntity> getLoanByBookId(Integer bookId){
+        return loanRepository.findByBookId (bookId);
+    }
+
+    public List<LoanEntity> getLoanByBorrowerId(Integer borrowerId){
+        return loanRepository.findByBorrowerId(borrowerId);
+    }
+
+    public List<LoanEntity> getLoanByDateBorrwed(LocalDateTime dateBorrowed){
+        return loanRepository.findByDateBorrowed(dateBorrowed);
+    }
+    public List<LoanEntity> getLoanByDateDue(LocalDateTime dateDue){
+        return loanRepository.findByDateDue(dateDue);
+    }
+    
+
 }
 
