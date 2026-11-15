@@ -1,6 +1,8 @@
 package com.example.library_loans.controller;
 
+import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.LoanEntity;
+import com.example.library_loans.entity.LoanEntity.LoanStatus;
 import com.example.library_loans.service.BookService;
 import com.example.library_loans.service.LoanService;
 
@@ -60,6 +62,12 @@ public class LoanController {
         return loanService.getLoanByDateDue(date);
     }
     */
+
+    @GetMapping("/LoanStatus/{status}")
+    public List<LoanEntity> getLoanByMemebership(@PathVariable LoanStatus loanStatus){
+        return loanService.getLoanByLoanStatus(loanStatus);
+    }
+    
     @PostMapping
     public LoanEntity create(@RequestBody LoanEntity loan){
         return loanService.createLoan(loan);

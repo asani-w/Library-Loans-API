@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BorrowerEntity;
+import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.repository.BorrowerRepository;
 
 @Service 
@@ -50,6 +51,10 @@ public class BorrowerService {
 
      public List<BorrowerEntity> getBorrowerByDateCreated(LocalDateTime date){
         return borrowerRepository.findByDateCreated(date);
+    }
+
+    public List<BorrowerEntity> getBorrowerByMembershipStatus(MembershipStatus membershipStatus){
+        return borrowerRepository.findByMembershipStatus(membershipStatus);
     }
 
     public BorrowerEntity deleteBorrower(Integer id){

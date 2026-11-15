@@ -8,7 +8,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BookEntity;
-
+import com.example.library_loans.entity.BookEntity.BookCondition;
+import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.repository.BookRepository;
 
 @Service 
@@ -45,6 +46,13 @@ public class BookService {
         return bookRepository.findBySource(source);
     }
 
+    public List<BookEntity> getBookByStatus(BookStatus bookStatus){
+        return bookRepository.findByBookStatus(bookStatus);
+    }
+    public List<BookEntity> getBookByCondtion(BookCondition bookCondition){
+        return bookRepository.findByBookCondition(bookCondition);
+    }
+    
     public BookEntity deleteBook(Integer id){
         Optional<BookEntity> book= getBookById(id);
         BookEntity record=book.get();

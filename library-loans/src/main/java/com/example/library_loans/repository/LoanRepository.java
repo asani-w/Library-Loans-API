@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.library_loans.entity.LoanEntity;
-
+import com.example.library_loans.entity.LoanEntity.LoanStatus;
 
 public interface LoanRepository extends JpaRepository<LoanEntity,Integer> {
 
@@ -14,5 +14,7 @@ public interface LoanRepository extends JpaRepository<LoanEntity,Integer> {
     List<LoanEntity>findByBorrowerId(Integer borrowerId);
     List<LoanEntity>findByDateBorrowed(LocalDateTime dateBorrowed);
     List<LoanEntity>findByDateDue(LocalDateTime dateDue);
+    List<LoanEntity>findByLoanStatus(LoanStatus loanStatus);
+    
     
 }

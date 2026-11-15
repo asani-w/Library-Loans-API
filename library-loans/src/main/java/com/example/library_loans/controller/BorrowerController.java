@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_loans.entity.BorrowerEntity;
+import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.service.BorrowerService;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +61,11 @@ public class BorrowerController {
     }
 
      */
+
+    @GetMapping("/MembershipStatus/{status}")
+    public List<BorrowerEntity> getBorrowerByMemebershipStatus(@PathVariable MembershipStatus membershipStatus){
+        return borrowerService.getBorrowerByMembershipStatus(membershipStatus);
+    }
 
     @PostMapping
     public BorrowerEntity create(@RequestBody BorrowerEntity borrower){

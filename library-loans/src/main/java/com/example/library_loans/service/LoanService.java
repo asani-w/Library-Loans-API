@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.library_loans.repository.LoanRepository;
 import com.example.library_loans.repository.BorrowerRepository;
 import com.example.library_loans.entity.LoanEntity;
+import com.example.library_loans.entity.LoanEntity.LoanStatus;
 import com.example.library_loans.repository.BookRepository;
 
 @Service 
@@ -55,6 +56,9 @@ public class LoanService {
         return loanRepository.findByDateDue(dateDue);
     }
 
+    public List<LoanEntity> getLoanByLoanStatus(LoanStatus loanStatus){
+        return loanRepository.findByLoanStatus(loanStatus);
+    }
     public LoanEntity deleteLoan(Integer id){
         Optional<LoanEntity> loan = getLoanById(id);
         LoanEntity record=loan.get();
