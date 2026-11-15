@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.library_loans.entity.BrorrowerEntity;
+import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.service.BorrowerService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequestMapping ("/api/Borrowers")
 @RestController 
@@ -28,17 +28,17 @@ public class BorrowerController {
     }
 
     @GetMapping("/")
-    public List<BrorrowerEntity> getAllBorrowers(){
+    public List<BorrowerEntity> getAllBorrowers(){
         return borrowerRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<BrorrowerEntity> getBorrowerById(@PathVariable Integer id){
+    public Optional<BorrowerEntity> getBorrowerById(@PathVariable Integer id){
         return borrowerService.getBorrowerById(id);
     }
 
     @PostMapping
-    public BrorrowerEntity create(@RequestBody BrorrowerEntity borrower){
+    public BorrowerEntity create(@RequestBody BorrowerEntity borrower){
         return borrowerService.createBorrower(borrower);
     }
 }

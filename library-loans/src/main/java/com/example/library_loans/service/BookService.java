@@ -27,7 +27,7 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public BookEntity createBook(BookEntity borrow){
-        return bookRepository.save(borrow);
+    public BookEntity createBook(BookEntity book){
+        return bookRepository.save(book);
     }
 }

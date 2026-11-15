@@ -2,6 +2,7 @@ package com.example.library_loans.service;
 
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class LoanService {
     }
 
     public LoanEntity createLoan(LoanEntity loan){
+        loan.setDateDue(LocalDateTime.now().plusDays(7));
         return loanRepository.save(loan);   
     }
 

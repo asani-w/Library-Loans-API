@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.library_loans.entity.BrorrowerEntity;
+import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.repository.BorrowerRepository;
 
 @Service 
@@ -18,15 +18,15 @@ public class BorrowerService {
         this.borrowerRepository=borrowerRepository;
     }
 
-    public List<BrorrowerEntity> getBorrowers(){
+    public List<BorrowerEntity> getBorrowers(){
         return borrowerRepository.findAll();
     }
 
-    public Optional<BrorrowerEntity> getBorrowerById(Integer id){
+    public Optional<BorrowerEntity> getBorrowerById(Integer id){
         return borrowerRepository.findById(id);
     }
     
-    public BrorrowerEntity createBorrower(BrorrowerEntity borrower){
+    public BorrowerEntity createBorrower(BorrowerEntity borrower){
         return borrowerRepository.save(borrower);
     }
 

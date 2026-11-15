@@ -3,14 +3,24 @@ package com.example.library_loans.entity;
 import jakarta.persistence.*;
 import java.time.*;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Entity 
 public class LoanEntity {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     private Integer bookId;
     private Integer borrowerId;
+    @CreationTimestamp 
+
+    @Column(updatable=false)
+    @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime dateBorrowed;
+    @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime dateDue;
 
     public LoanEntity(){}
@@ -20,10 +30,9 @@ public class LoanEntity {
     public void setBookId(Integer bookId){this.bookId=bookId;}
     public Integer getborrowerId(){return borrowerId;}
     public void setBorrowerId(Integer borrowerId){this.borrowerId=borrowerId;}
-    public LocalDateTime getdateBorred(){return dateBorrowed;}
-    public void setDateBorrowed(){dateBorrowed=LocalDateTime.now();}
+    public LocalDateTime getdateBorrowed(){return dateBorrowed;}
     public LocalDateTime getDateDue(){return dateDue;}
-    public void setDateDue(int days){dateDue = (dateBorrowed.plusDays(days));}
+    public void setDateDue(LocalDateTime dateDue){this.dateDue=dateDue;}
 
 
 
