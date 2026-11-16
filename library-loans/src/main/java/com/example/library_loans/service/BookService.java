@@ -76,6 +76,7 @@ public class BookService {
         record.setBookCondition(entity.getBookCondition());
         record.setBookStatus(entity.getBookStatus());
         record.setBookSource(entity.getBookSource());
+        
         return bookRepository.save(record);
 
     }

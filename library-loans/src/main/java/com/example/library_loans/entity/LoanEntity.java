@@ -32,8 +32,8 @@ public class LoanEntity {
         Returned,
         Unreturned
     }
-    @NotNull 
     @Enumerated(EnumType.STRING)
+    @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LoanStatus loanStatus;
 
 

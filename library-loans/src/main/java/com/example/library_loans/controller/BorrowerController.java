@@ -57,6 +57,7 @@ public class BorrowerController {
         return borrowerService.getBorrowerByTelephoneNumber(tel);
     }
     /*
+    also include date expired
 
     @GetMapping("/dateCreated/{date}")
     public List<BorrowerEntity>getBorrowerByTitle(@PathVariable String title){

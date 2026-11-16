@@ -36,24 +36,27 @@ public class BorrowerService {
         return borrowerRepository.findByFirstName(fname);
     }
 
-     public List<BorrowerEntity> getBorrowerByLastName(String lname ){
+    public List<BorrowerEntity> getBorrowerByLastName(String lname ){
         return borrowerRepository.findByLastName(lname);
     }
 
-     public List<BorrowerEntity> getBorrowerByEmail(String email ){
+    public List<BorrowerEntity> getBorrowerByEmail(String email ){
         return borrowerRepository.findByEmail(email);
     }
 
-     public List<BorrowerEntity> getBorrowerByTelephoneNumber(String tel){
+    public List<BorrowerEntity> getBorrowerByTelephoneNumber(String tel){
         return borrowerRepository.findByTelephoneNumber(tel);
     }
 
-     public List<BorrowerEntity> getBorrowerByDateCreated(LocalDateTime date){
+    public List<BorrowerEntity> getBorrowerByDateCreated(LocalDateTime date){
         return borrowerRepository.findByDateCreated(date);
     }
 
     public List<BorrowerEntity> getBorrowerByMembershipStatus(MembershipStatus membershipStatus){
         return borrowerRepository.findByMembershipStatus(membershipStatus);
+    }
+    public List<BorrowerEntity>getBorrowerByDateExpired(LocalDateTime date){
+        return borrowerRepository.findByExpiryDate(date);
     }
 
     public BorrowerEntity update(Integer id, BorrowerEntity entity){

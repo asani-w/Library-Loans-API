@@ -89,7 +89,8 @@ public class BookEntity{
     public enum BookStatus{
         Borrowed,
         Available,
-        Removed   
+        Reserved,
+        Removed;   
     }
     @NotNull 
     @Enumerated (EnumType.STRING)
@@ -99,8 +100,9 @@ public class BookEntity{
         New,
         Excellent,
         Acceptable,
-        Poor
+        Poor;
     }
+    
     @NotNull 
     @Enumerated (EnumType.STRING)
     private BookCondition bookCondition;

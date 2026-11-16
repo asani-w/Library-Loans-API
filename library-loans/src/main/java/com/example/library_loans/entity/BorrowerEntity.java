@@ -36,9 +36,13 @@ public class BorrowerEntity {
         Suspended
     }
 
+
+
     @Enumerated(EnumType.STRING)
     @NotNull 
     private MembershipStatus membershipStatus;
+
+    LocalDateTime expiryDate;
 
     public BorrowerEntity(){}
 
@@ -54,5 +58,7 @@ public class BorrowerEntity {
     public void setTelephoneNumber(String telephoneNumber){this.telephoneNumber=telephoneNumber;}
     public MembershipStatus getMembershipStatus(){return membershipStatus;}
     public void setMembershipStatus(MembershipStatus membershipStatus){this.membershipStatus=membershipStatus;}
-
+    public LocalDateTime getExpiryDate(){return expiryDate;}
+    public void setExpiryDate(LocalDateTime expiryDate){this.expiryDate=expiryDate;}
+    
 }
