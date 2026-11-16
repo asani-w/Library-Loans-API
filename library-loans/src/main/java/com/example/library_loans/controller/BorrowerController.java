@@ -66,8 +66,8 @@ public class BorrowerController {
      */
 
     @GetMapping("/MembershipStatus/{status}")
-    public List<BorrowerEntity> getBorrowerByMembershipStatus(@PathVariable MembershipStatus membershipStatus){
-        return borrowerService.getBorrowerByMembershipStatus(membershipStatus);
+    public List<BorrowerEntity> getBorrowerByMembershipStatus(@PathVariable MembershipStatus status){
+        return borrowerService.getBorrowerByMembershipStatus(status);
     }
 
     @PostMapping

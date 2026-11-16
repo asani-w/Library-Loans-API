@@ -15,6 +15,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,13 +63,13 @@ public class BookController {
     }
     */
     @GetMapping("/BookSource/{source}")
-    public List<BookEntity> getBookBySource(@PathVariable BookSource bookSource){
-        return bookService.getBookByBookSource(bookSource);
+    public List<BookEntity> getBookBySource(@PathVariable BookSource source){
+        return bookService.getBookByBookSource(source);
     }
 
     @GetMapping("/BookGenre/{genre}")
-    public List<BookEntity>getBookByGenre(@PathVariable BookGenre bookGenre){
-        return bookService.getBookByBookGenre(bookGenre);
+    public List<BookEntity>getBookByGenre(@PathVariable BookGenre genre){
+        return bookService.getBookByBookGenre(genre);
     }
 
     @GetMapping("/BookCategory/{category}")
@@ -75,18 +78,19 @@ public class BookController {
     }
 
     @GetMapping("/BookStatus/{status}")
-    public List<BookEntity> getBookByBookStatus(BookStatus bookStatus){
-        return bookService.getBookByStatus(bookStatus);
+    public List<BookEntity> getBookByBookStatus(BookStatus status){
+        return bookService.getBookByStatus(status);
     }
 
     @GetMapping("BookCondition/{condition}")
-    public List<BookEntity> getBookByCondition(BookCondition bookCondition){
-        return bookService.getBookByCondition(bookCondition);
+    public List<BookEntity> getBookByCondition(BookCondition condition){
+        return bookService.getBookByCondition(condition);
     }
 
     @PostMapping
-    public BookEntity create(@Valid @RequestBody BookEntity book) {
-        return bookService.createBook(book);
+    public ResponseEntity<BookEntity> create(@Valid @RequestBody BookEntity book) {
+        BookEntity savedBook = bookService.createBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
     }
     
     @PutMapping("/{id}")

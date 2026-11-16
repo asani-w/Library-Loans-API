@@ -13,6 +13,7 @@ import com.example.library_loans.entity.BookEntity;
 import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.entity.LoanEntity.LoanStatus;
+import com.example.library_loans.exception.MissingInputException;
 import com.example.library_loans.service.BookService;
 
 import jakarta.transaction.Transactional;
@@ -43,7 +44,7 @@ public class LoanService {
         loan.setDateDue(LocalDateTime.now().plusDays(7));
         Integer bookId= loan.getBookId();
         Optional<BookEntity> book =  bookService.getBookById(bookId);
-        if (book.isEmpty()){return loan;}
+        if (book.isEmpty()){throw new MissingInputException("Book not Found");}
         BookEntity bookRecord = book.get();
         if (bookRecord.getBookStatus() == BookStatus.Available){
             bookRecord.setBookStatus(BookStatus.Borrowed);

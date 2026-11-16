@@ -44,12 +44,12 @@ public class LoanController {
     }
 
     @GetMapping("/bookid/{id}")
-    public List<LoanEntity> getLoanByBookId(@PathVariable Integer bookId ){
-        return loanService.getLoanByBookId(bookId);
+    public List<LoanEntity> getLoanByBookId(@PathVariable Integer id ){
+        return loanService.getLoanByBookId(id);
     }
     @GetMapping("/borrowerid/{id}")
-    public List<LoanEntity>getLoanByBorrowerId(@PathVariable Integer borrowerId){
-        return loanService.getLoanByBookId(borrowerId);
+    public List<LoanEntity>getLoanByBorrowerId(@PathVariable Integer id){
+        return loanService.getLoanByBorrowerId(id);
     }
 
     /*
@@ -75,7 +75,7 @@ public class LoanController {
     }
     
     @PutMapping("/{id}")
-    public LoanEntity update(@Valid @PathVariable Integer id, @RequestBody LoanEntity entity) {
+    public LoanEntity update(@PathVariable Integer id, @RequestBody LoanEntity entity) {
         return loanService.update(id,entity);
     }
     @DeleteMapping("/{id}")
