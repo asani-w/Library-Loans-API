@@ -21,7 +21,7 @@ import com.example.library_loans.entity.LoanEntity.LoanStatus;
 import com.example.library_loans.exception.BadInputException;
 import com.example.library_loans.exception.MissingInputException;
 import com.example.library_loans.repository.BookRepository;
-import com.example.library_loans.service.LoanService;
+import com.example.library_loans.repository.LoanRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -29,11 +29,11 @@ import jakarta.transaction.Transactional;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final LoanService loanService;
+    private final LoanRepository loanRepository;
 
-    public BookService(BookRepository bookRepository, LoanService loanService){
+    public BookService(BookRepository bookRepository, LoanRepository loanRepository){
         this.bookRepository=bookRepository;
-        this.loanService=loanService;
+        this.loanRepository=loanRepository;
     }
     
     public List<BookEntity> getBooks(){
@@ -90,7 +90,7 @@ public class BookService {
         Optional<BookEntity> book = getBookById(id);
         BookEntity record=book.get();
         
-        List<LoanEntity> loan = loanService.getLoanByBookId(entity.getId());
+        List<LoanEntity> loan = loanRepository.findByBookId(entity.getId());
 
         for (LoanEntity item : loan) {
             if(item.getLoanStatus()!=LoanStatus.Returned){
