@@ -1,6 +1,8 @@
 package com.example.library_loans.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.*;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,9 +16,13 @@ public class BorrowerEntity {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
+    @NotNull 
     private String firstName;
+    @NotNull 
     private String lastName;
+    @NotNull 
     private String email;
+    @NotNull 
     private String telephoneNumber;
 
     @CreationTimestamp 
@@ -30,8 +36,9 @@ public class BorrowerEntity {
         Suspended
     }
 
-    @Enumerated (EnumType.STRING)
-    private MembershipStatus MembershipStatus;
+    @Enumerated(EnumType.STRING)
+    @NotNull 
+    private MembershipStatus membershipStatus;
 
     public BorrowerEntity(){}
 
@@ -45,7 +52,7 @@ public class BorrowerEntity {
     public void setEmail(String email){this.email=email;}
     public String getTelephoneNumber(){return telephoneNumber;}
     public void setTelephoneNumber(String telephoneNumber){this.telephoneNumber=telephoneNumber;}
-    public MembershipStatus getMembershipStatus(){return MembershipStatus;}
-    public void setMembershipStatus(MembershipStatus membershipStatus){this.MembershipStatus=membershipStatus;}
+    public MembershipStatus getMembershipStatus(){return membershipStatus;}
+    public void setMembershipStatus(MembershipStatus membershipStatus){this.membershipStatus=membershipStatus;}
 
 }

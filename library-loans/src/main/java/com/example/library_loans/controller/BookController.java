@@ -3,9 +3,14 @@ package com.example.library_loans.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_loans.entity.BookEntity;
+import com.example.library_loans.entity.BookEntity.BookCategory;
 import com.example.library_loans.entity.BookEntity.BookCondition;
+import com.example.library_loans.entity.BookEntity.BookGenre;
+import com.example.library_loans.entity.BookEntity.BookSource;
 import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.service.BookService;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RequestMapping ("/api/books")
@@ -52,9 +59,19 @@ public class BookController {
         return bookService.getBookByDateAdded(date);
     }
     */
-    @GetMapping("/source/{source}")
-    public List<BookEntity> getBookBySource(@PathVariable String source){
-        return bookService.getBookBySource(source);
+    @GetMapping("/BookSource/{source}")
+    public List<BookEntity> getBookBySource(@PathVariable BookSource bookSource){
+        return bookService.getBookByBookSource(bookSource);
+    }
+
+    @GetMapping("/BookGenre/{genre}")
+    public List<BookEntity>getBookByGenre(@PathVariable BookGenre bookGenre){
+        return bookService.getBookByBookGenre(bookGenre);
+    }
+
+    @GetMapping("/BookCategory/{category}")
+    public List<BookEntity>getBookByCategory(@PathVariable BookCategory category){
+        return bookService.getBookByBookCategory(category);
     }
 
     @GetMapping("/BookStatus/{status}")
@@ -66,12 +83,17 @@ public class BookController {
     public List<BookEntity> getBookByCondition(BookCondition bookCondition){
         return bookService.getBookByCondtion(bookCondition);
     }
-    
+
     @PostMapping
-    public BookEntity create(@RequestBody BookEntity book) {
+    public BookEntity create(@Valid @RequestBody BookEntity book) {
         return bookService.createBook(book);
     }
     
+    @PutMapping("/{id}")
+    public BookEntity UpdateBook(@Valid @PathVariable Integer id, @RequestBody BookEntity entity) {
+        return bookService.updateBook(id, entity);
+    }
+
     @DeleteMapping("/{id}")
     public BookEntity deleteBook(@PathVariable Integer id){
         return bookService.deleteBook(id);
