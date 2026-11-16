@@ -9,18 +9,24 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.repository.LoanRepository;
-
+import com.example.library_loans.entity.BookEntity;
 import com.example.library_loans.entity.LoanEntity;
+import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.entity.LoanEntity.LoanStatus;
+import com.example.library_loans.service.BookService;
 
+import jakarta.transaction.Transactional;
 
 @Service 
 public class LoanService {
 
     private final LoanRepository loanRepository;
+    private final BookService bookService;
 
-    public LoanService(LoanRepository loanRepository){
+
+    public LoanService(LoanRepository loanRepository, BookService bookService){
         this.loanRepository=loanRepository;
+        this.bookService=bookService;
     }
 
 
@@ -32,9 +38,22 @@ public class LoanService {
         return loanRepository.findById(id);
     }
 
+    @Transactional 
     public LoanEntity createLoan(LoanEntity loan){
         loan.setDateDue(LocalDateTime.now().plusDays(7));
-        return loanRepository.save(loan);   
+        Integer bookId= loan.getBookId();
+        Optional<BookEntity> book =  bookService.getBookById(bookId);
+        if (book.isEmpty()){return loan;}
+        BookEntity bookRecord = book.get();
+        if (bookRecord.getBookStatus() == BookStatus.Available){
+            bookRecord.setBookStatus(BookStatus.Borrowed);
+            bookService.updateBook(bookId, bookRecord);
+            return loanRepository.save(loan);   
+        }
+        else
+        {
+            return loan;
+        }
     }
 
     public List<LoanEntity> getLoanByBookId(Integer bookId){
