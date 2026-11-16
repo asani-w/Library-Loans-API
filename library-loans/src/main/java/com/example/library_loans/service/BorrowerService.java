@@ -67,6 +67,7 @@ public class BorrowerService {
         record.setEmail(entity.getEmail());
         record.setTelephoneNumber(entity.getTelephoneNumber());
         record.setMembershipStatus(entity.getMembershipStatus());
+        record.setExpiryDate(LocalDateTime.now().plusMonths(6));
         return borrowerRepository.save(record);
     }
 

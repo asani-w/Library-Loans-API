@@ -46,9 +46,11 @@ public class BookService {
 
     @Transactional 
     public BookEntity createBook(BookEntity book){
-        if(getBookByTitle(book.getTitle())!=null & getBookByBookAuthor(book.getAuthor())!=null){
+        /*
+        if(getBookByTitle(book.getTitle())!=null && getBookByBookAuthor(book.getAuthor())!=null){
             throw new BadInputException("Book With the Same Title and Same Author Already Exists");
         }
+             */
         return bookRepository.save(book);
     }
 
