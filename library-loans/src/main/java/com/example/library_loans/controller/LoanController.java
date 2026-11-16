@@ -1,10 +1,11 @@
 package com.example.library_loans.controller;
 
-import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.LoanEntity.LoanStatus;
 import com.example.library_loans.service.BookService;
 import com.example.library_loans.service.LoanService;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -24,12 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController 
 public class LoanController {
     
-    private final BookService bookService;
     private final LoanService loanService;
 
     public  LoanController(LoanService loanService, BookService bookService){
         this.loanService=loanService;
-        this.bookService = bookService;
     }
 
     @GetMapping("/")
@@ -64,15 +65,19 @@ public class LoanController {
     */
 
     @GetMapping("/LoanStatus/{status}")
-    public List<LoanEntity> getLoanByMemebership(@PathVariable LoanStatus loanStatus){
+    public List<LoanEntity> getLoanByMembership(@PathVariable LoanStatus loanStatus){
         return loanService.getLoanByLoanStatus(loanStatus);
     }
-    
+
     @PostMapping
     public LoanEntity create(@RequestBody LoanEntity loan){
         return loanService.createLoan(loan);
     }
     
+    @PutMapping("/{id}")
+    public LoanEntity update(@Valid @PathVariable Integer id, @RequestBody LoanEntity entity) {
+        return loanService.update(id,entity);
+    }
     @DeleteMapping("/{id}")
     public LoanEntity deleteLoan(@PathVariable Integer id){
         return loanService.deleteLoan(id);

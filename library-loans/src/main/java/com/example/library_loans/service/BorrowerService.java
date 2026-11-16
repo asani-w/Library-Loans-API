@@ -1,7 +1,6 @@
 package com.example.library_loans.service;
 
 import java.util.Optional;
-import java.lang.foreign.Linker.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,6 +54,17 @@ public class BorrowerService {
 
     public List<BorrowerEntity> getBorrowerByMembershipStatus(MembershipStatus membershipStatus){
         return borrowerRepository.findByMembershipStatus(membershipStatus);
+    }
+
+    public BorrowerEntity update(Integer id, BorrowerEntity entity){
+        Optional<BorrowerEntity> borrower = getBorrowerById(id);
+        BorrowerEntity record = borrower.get();
+        record.setFirstName(entity.getFirstName());
+        record.setLastName(entity.getLastName());
+        record.setEmail(entity.getEmail());
+        record.setTelephoneNumber(entity.getTelephoneNumber());
+        record.setMembershipStatus(entity.getMembershipStatus());
+        return borrowerRepository.save(record);
     }
 
     public BorrowerEntity deleteBorrower(Integer id){

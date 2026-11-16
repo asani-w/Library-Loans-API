@@ -63,7 +63,7 @@ public class BookService {
     public List<BookEntity> getBookByStatus(BookStatus bookStatus){
         return bookRepository.findByBookStatus(bookStatus);
     }
-    public List<BookEntity> getBookByCondtion(BookCondition bookCondition){
+    public List<BookEntity> getBookByCondition(BookCondition bookCondition){
         return bookRepository.findByBookCondition(bookCondition);
     }
 

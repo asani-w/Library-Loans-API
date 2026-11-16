@@ -81,7 +81,7 @@ public class BookController {
 
     @GetMapping("BookCondition/{condition}")
     public List<BookEntity> getBookByCondition(BookCondition bookCondition){
-        return bookService.getBookByCondtion(bookCondition);
+        return bookService.getBookByCondition(bookCondition);
     }
 
     @PostMapping

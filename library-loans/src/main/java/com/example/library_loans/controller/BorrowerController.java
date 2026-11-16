@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.service.BorrowerService;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -63,13 +66,17 @@ public class BorrowerController {
      */
 
     @GetMapping("/MembershipStatus/{status}")
-    public List<BorrowerEntity> getBorrowerByMemebershipStatus(@PathVariable MembershipStatus membershipStatus){
+    public List<BorrowerEntity> getBorrowerByMembershipStatus(@PathVariable MembershipStatus membershipStatus){
         return borrowerService.getBorrowerByMembershipStatus(membershipStatus);
     }
 
     @PostMapping
     public BorrowerEntity create(@RequestBody BorrowerEntity borrower){
         return borrowerService.createBorrower(borrower);
+    }
+    @PutMapping("/{id}")
+    public BorrowerEntity update(@Valid @PathVariable Integer id, @RequestBody BorrowerEntity entity ){
+        return borrowerService.update(id,entity);
     }
     @DeleteMapping ("/{id}")
     public BorrowerEntity delete(@PathVariable Integer id){

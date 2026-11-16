@@ -9,22 +9,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.repository.LoanRepository;
-import com.example.library_loans.repository.BorrowerRepository;
+
 import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.LoanEntity.LoanStatus;
-import com.example.library_loans.repository.BookRepository;
+
 
 @Service 
 public class LoanService {
 
     private final LoanRepository loanRepository;
-    private final BorrowerRepository borrowerRepository;
-    private final  BookRepository bookRepository;
 
-    public LoanService(LoanRepository loanRepository, BorrowerRepository borrowerRepository, BookRepository bookRepository){
+    public LoanService(LoanRepository loanRepository){
         this.loanRepository=loanRepository;
-        this.borrowerRepository=borrowerRepository;
-        this.bookRepository=bookRepository;
     }
 
 
@@ -49,7 +45,7 @@ public class LoanService {
         return loanRepository.findByBorrowerId(borrowerId);
     }
 
-    public List<LoanEntity> getLoanByDateBorrwed(LocalDateTime dateBorrowed){
+    public List<LoanEntity> getLoanByDateBorrowed(LocalDateTime dateBorrowed){
         return loanRepository.findByDateBorrowed(dateBorrowed);
     }
     public List<LoanEntity> getLoanByDateDue(LocalDateTime dateDue){
@@ -59,6 +55,16 @@ public class LoanService {
     public List<LoanEntity> getLoanByLoanStatus(LoanStatus loanStatus){
         return loanRepository.findByLoanStatus(loanStatus);
     }
+
+    public LoanEntity update(Integer id, LoanEntity entity){
+        Optional<LoanEntity> loan = getLoanById(id);
+        LoanEntity record=loan.get();
+        record.setBorrowerId(entity.getBorrowerId());
+        record.setLoanStatus(entity.getLoanStatus());
+        return loanRepository.save(record);
+    }
+
+
     public LoanEntity deleteLoan(Integer id){
         Optional<LoanEntity> loan = getLoanById(id);
         LoanEntity record=loan.get();
