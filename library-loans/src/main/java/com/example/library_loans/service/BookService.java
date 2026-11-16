@@ -24,6 +24,7 @@ import com.example.library_loans.repository.BookRepository;
 import com.example.library_loans.repository.LoanRepository;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service 
 public class BookService {
@@ -73,6 +74,8 @@ public class BookService {
     public List<BookEntity> getBookByDateAdded(LocalDateTime dateAdded){
         return bookRepository.findByDateAdded(dateAdded);
     }
+    
+    
     public List<BookEntity> getBookByBookSource(BookSource booksource){
         return bookRepository.findByBookSource(booksource);
     }
@@ -116,7 +119,18 @@ public class BookService {
         return bookRepository.save(record);
 
     }
-
+    /*
+    @Valid 
+    public List<BookEntity> bulkCreate(List<BookEntity> books){
+        List<BookEntity> booksSaved= new ArrayList<>();
+        for (BookEntity book : books) {
+            booksSaved.add(book);
+            
+        }
+        return booksSaved;
+    }
+         */
+        
     public BookEntity deleteBook(Integer id){
         Optional<BookEntity> book= getBookById(id);
         BookEntity record=book.get();

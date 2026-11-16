@@ -29,6 +29,12 @@ public class BorrowerService {
     }
     
     public BorrowerEntity createBorrower(BorrowerEntity borrower){
+        if (borrower.getMembershipStatus()==MembershipStatus.Expired){
+            borrower.setExpiryDate(LocalDateTime.now());
+        }
+        else{
+        borrower.setExpiryDate(LocalDateTime.now().plusMonths(6));
+        }
         return borrowerRepository.save(borrower);
     }
 
@@ -67,7 +73,6 @@ public class BorrowerService {
         record.setEmail(entity.getEmail());
         record.setTelephoneNumber(entity.getTelephoneNumber());
         record.setMembershipStatus(entity.getMembershipStatus());
-        record.setExpiryDate(LocalDateTime.now().plusMonths(6));
         return borrowerRepository.save(record);
     }
 

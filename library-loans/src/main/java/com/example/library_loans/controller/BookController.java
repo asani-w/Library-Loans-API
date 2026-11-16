@@ -3,6 +3,7 @@ package com.example.library_loans.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_loans.entity.BookEntity;
+import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BookEntity.BookCategory;
 import com.example.library_loans.entity.BookEntity.BookCondition;
 import com.example.library_loans.entity.BookEntity.BookGenre;
@@ -106,5 +107,13 @@ public class BookController {
     public BookEntity deleteBook(@PathVariable Integer id){
         return bookService.deleteBook(id);
     }
+    /*
+    //bulk adding books
+    @PostMapping ("/bulk")
+    public ResponseEntity<List<BookEntity>>createBulk( @RequestBody List<BookEntity> books){
+        List<BookEntity> booksSaved=bookService.bulkCreate(books);
+        return ResponseEntity.status(HttpStatus.CREATED).body(booksSaved);
 
+    }
+     */
 }
