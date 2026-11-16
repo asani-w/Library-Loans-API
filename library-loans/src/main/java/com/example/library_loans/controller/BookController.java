@@ -87,6 +87,10 @@ public class BookController {
         return bookService.getBookByCondition(condition);
     }
 
+    @GetMapping("/BookAuthor/{author}")
+    public List<BookEntity> getBookByBookAuthor(@PathVariable String author){
+        return bookService.getBookByBookAuthor(author);
+    }
     @PostMapping
     public ResponseEntity<BookEntity> create(@Valid @RequestBody BookEntity book) {
         BookEntity savedBook = bookService.createBook(book);
@@ -102,4 +106,5 @@ public class BookController {
     public BookEntity deleteBook(@PathVariable Integer id){
         return bookService.deleteBook(id);
     }
+
 }

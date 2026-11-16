@@ -19,5 +19,5 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     List<BookEntity>findByDateAdded(LocalDateTime dateAdded);
     List<BookEntity>findByBookCondition(BookCondition bookCondition);
     List<BookEntity>findByBookStatus(BookStatus bookStatus);
-    
+    List<BookEntity>findByBookAuthor(String bookAuthor);
 }

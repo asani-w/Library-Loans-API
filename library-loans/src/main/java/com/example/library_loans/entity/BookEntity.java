@@ -102,10 +102,11 @@ public class BookEntity{
         Acceptable,
         Poor;
     }
-    
+
     @NotNull 
     @Enumerated (EnumType.STRING)
     private BookCondition bookCondition;
+    private String bookAuthor;
 
     public BookEntity() {}
 
@@ -123,5 +124,7 @@ public class BookEntity{
     public BookCategory getBookCategory(){return bookGenre.getCategory();}
     public BookGenre getBookGenre(){return bookGenre;}
     public void setBookGenre(BookGenre bookGenre){this.bookGenre=bookGenre;}
+    public String getAuthor(){return bookAuthor;}
+    public void setAuthor(String bookAuthor){this.bookAuthor=bookAuthor;}
 }
 

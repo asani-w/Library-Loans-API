@@ -114,6 +114,7 @@ public class LoanService {
         return loanRepository.findByLoanStatus(loanStatus);
     }
 
+    @Transactional 
     public LoanEntity update(Integer id, LoanEntity entity){
 
         Optional<LoanEntity> loan = getLoanById(id);

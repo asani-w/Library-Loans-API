@@ -10,20 +10,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BookEntity;
+import com.example.library_loans.entity.BorrowerEntity;
+import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.BookEntity.BookCategory;
 import com.example.library_loans.entity.BookEntity.BookCondition;
 import com.example.library_loans.entity.BookEntity.BookGenre;
 import com.example.library_loans.entity.BookEntity.BookSource;
 import com.example.library_loans.entity.BookEntity.BookStatus;
+import com.example.library_loans.entity.LoanEntity.LoanStatus;
+import com.example.library_loans.exception.BadInputException;
+import com.example.library_loans.exception.MissingInputException;
 import com.example.library_loans.repository.BookRepository;
+import com.example.library_loans.service.LoanService;
+
+import jakarta.transaction.Transactional;
 
 @Service 
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final LoanService loanService;
 
-    public BookService(BookRepository bookRepository){
+    public BookService(BookRepository bookRepository, LoanService loanService){
         this.bookRepository=bookRepository;
+        this.loanService=loanService;
     }
     
     public List<BookEntity> getBooks(){
@@ -34,7 +44,11 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
+    @Transactional 
     public BookEntity createBook(BookEntity book){
+        if(getBookByTitle(book.getTitle())!=null & getBookByBookAuthor(book.getAuthor())!=null){
+            throw new BadInputException("Book With the Same Title and Same Author Already Exists");
+        }
         return bookRepository.save(book);
     }
 
@@ -67,14 +81,34 @@ public class BookService {
     public List<BookEntity> getBookByCondition(BookCondition bookCondition){
         return bookRepository.findByBookCondition(bookCondition);
     }
+    public List<BookEntity> getBookByBookAuthor(String bookauthor){
+        return bookRepository.findByBookAuthor(bookauthor);
+    }
 
+    @Transactional 
     public BookEntity updateBook(Integer id, BookEntity entity){
         Optional<BookEntity> book = getBookById(id);
         BookEntity record=book.get();
+        
+        List<LoanEntity> loan = loanService.getLoanByBookId(entity.getId());
+
+        for (LoanEntity item : loan) {
+            if(item.getLoanStatus()!=LoanStatus.Returned){
+                throw new BadInputException("Book is already on a Loan and cannot be updated unless returned");
+            }
+            else if (item.getLoanStatus()==LoanStatus.Returned){
+                record.setBookStatus(entity.getBookStatus());
+            }
+            else{
+                throw new MissingInputException("Lon Not Found");
+            }
+        }
+        //if we update book or author we need to check to see if it clashes with an existing record
+        
+
         record.setTitle(entity.getTitle());
         record.setBookGenre(entity.getBookGenre());
         record.setBookCondition(entity.getBookCondition());
-        record.setBookStatus(entity.getBookStatus());
         record.setBookSource(entity.getBookSource());
         
         return bookRepository.save(record);
