@@ -93,18 +93,27 @@ public class LoanController {
     }
 
     @PostMapping
-    public ResponseEntity<LoanEntity> create(@RequestBody LoanEntity loan){
-        LoanEntity loanCreated=loanService.createLoan(loan);
-        return ResponseEntity.status(409).body(loanCreated);
+    public ResponseEntity<String> create(@Valid @RequestBody LoanEntity loan){
+        String message =loanService.createLoan(loan);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     
     @PutMapping("/{id}")
-    public LoanEntity update(@PathVariable Integer id, @RequestBody LoanEntity entity) {
-        return loanService.update(id,entity);
+    public ResponseEntity<String> update(@Valid @PathVariable Integer id, @RequestBody LoanEntity entity) {
+        String message = loanService.update(id,entity);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> unreturn(@PathVariable Integer id) {
+        String message = loanService.unreturn(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
     @DeleteMapping("/{id}")
-    public LoanEntity deleteLoan(@PathVariable Integer id){
-        return loanService.deleteLoan(id);
+    public ResponseEntity<String> deleteLoan(@PathVariable Integer id){
+        String message = loanService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
     
 

@@ -22,4 +22,5 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     List<BookEntity>findByBookStatus(BookStatus bookStatus);
     List<BookEntity>findByBookAuthor(String bookAuthor);
     List<BookEntity> findByDateAddedGreaterThanEqualAndDateAddedLessThan(LocalDateTime start,LocalDateTime end);
+    boolean existsByTitleAndBookAuthor(String title, String bookAuthor);
 }

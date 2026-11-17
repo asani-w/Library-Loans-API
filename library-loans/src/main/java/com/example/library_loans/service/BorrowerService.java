@@ -1,25 +1,40 @@
 package com.example.library_loans.service;
 
+import com.example.library_loans.controller.BorrowerController;
+import com.example.library_loans.repository.BookRepository;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BookEntity;
+import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
+import com.example.library_loans.entity.LoanEntity;
+import com.example.library_loans.exception.BadInputException;
+import com.example.library_loans.exception.MissingInputException;
 import com.example.library_loans.repository.BorrowerRepository;
+import com.example.library_loans.repository.LoanRepository;
+import jakarta.transaction.Transactional;
 
 @Service 
 public class BorrowerService {
 
+    private final BorrowerController borrowerController;
+    private final BookRepository bookRepository;
     private final BorrowerRepository borrowerRepository;
+    private final LoanRepository loanRepository;
 
 
-    public BorrowerService(BorrowerRepository borrowerRepository){
+    public BorrowerService(BorrowerRepository borrowerRepository, LoanRepository loanRepository, BookRepository bookRepository, BorrowerController borrowerController){
         this.borrowerRepository=borrowerRepository;
+        this.loanRepository=loanRepository;
+        this.bookRepository = bookRepository;
+        this.borrowerController = borrowerController;
     }
 
     public List<BorrowerEntity> getBorrowers(){
@@ -29,15 +44,44 @@ public class BorrowerService {
     public Optional<BorrowerEntity> getBorrowerById(Integer id){
         return borrowerRepository.findById(id);
     }
-    
-    public BorrowerEntity createBorrower(BorrowerEntity borrower){
+    @Transactional 
+    public String createBorrower(BorrowerEntity borrower){
+        if(!(borrower.getFirstName().length()>=3) && !(borrower.getFirstName().length()<=30)){
+            throw new BadInputException("First name is not between 2 and 30 characters");
+        }
+        if(!(borrower.getLastName().length()>=3) && !(borrower.getLastName().length()<=30)){
+            throw new BadInputException("First name is not between 2 and 30 characters");
+        }
+        if (!(borrower.getEmail().contains("@"))){
+            throw new BadInputException("email does not contain @");
+        }
+        if (!(borrower.getEmail().length()>=5)&& !(borrower.getEmail().length()<=200)){
+            throw new BadInputException("email is not beteen 5 and 200 characters");
+        }
+        if (!(borrower.getTelephoneNumber().length() ==10)){
+            throw new BadInputException("telephone number is greater than or less than 10 characters");
+        }
+        if(borrower.getTelephoneNumber().contains("(")||borrower.getTelephoneNumber().contains(")")){
+            throw new BadInputException("Telephone number contains ( )");
+        }
+        if(borrower.getTelephoneNumber().contains("+")){
+            throw new BadInputException("Telephone number contains +");
+        }
+
         if (borrower.getMembershipStatus()==MembershipStatus.Expired){
             borrower.setExpiryDate(LocalDateTime.now());
         }
         else{
         borrower.setExpiryDate(LocalDateTime.now().plusMonths(6));
         }
-        return borrowerRepository.save(borrower);
+
+        if((borrowerRepository.findByFirstNameAndLastNameExists(borrower.getFirstName(), borrower.getLastName())) && borrowerRepository.findByEmailOrTelephoneNumberExists(borrower.getEmail(), borrower.getTelephoneNumber()) ){
+            throw new BadInputException("Borrower with the same name and Email/Telephone number exists already");
+        }
+
+        borrowerRepository.save(borrower);
+        return("Borrower was created successfully");
+        
     }
 
     public List<BorrowerEntity> getBorrowerByFirstName(String fname){
@@ -80,21 +124,89 @@ public class BorrowerService {
         return borrowerRepository.findByExpiryDateGreaterThanEqualAndExpiryDateLessThan(start, end);
     }
 
-    public BorrowerEntity update(Integer id, BorrowerEntity entity){
+    public String update(Integer id, BorrowerEntity entity){
         Optional<BorrowerEntity> borrower = getBorrowerById(id);
         BorrowerEntity record = borrower.get();
+
+        if(!(entity.getFirstName().length()>=3) && !(entity.getFirstName().length()<=30)){
+            throw new BadInputException("First name is not between 2 and 30 characters");
+        }
+        if(!(entity.getLastName().length()>=3) && !(entity.getLastName().length()<=30)){
+            throw new BadInputException("First name is not between 2 and 30 characters");
+        }
+        if (!(entity.getEmail().contains("@"))){
+            throw new BadInputException("email does not contain @");
+        }
+        if (!(entity.getEmail().length()>=5)&& !(entity.getEmail().length()<=200)){
+            throw new BadInputException("email is not beteen 5 and 200 characters");
+        }
+        if (!(entity.getTelephoneNumber().length() ==10)){
+            throw new BadInputException("telephone number is greater than or less than 10 characters");
+        }
+        if(entity.getTelephoneNumber().contains("(")||entity.getTelephoneNumber().contains(")")){
+            throw new BadInputException("Telephone number contains ( )");
+        }
+        if(entity.getTelephoneNumber().contains("+")){
+            throw new BadInputException("Telephone number contains +");
+        }
+
+        if (entity.getMembershipStatus()==MembershipStatus.Expired){
+            entity.setExpiryDate(LocalDateTime.now());
+        }
+
         record.setFirstName(entity.getFirstName());
         record.setLastName(entity.getLastName());
         record.setEmail(entity.getEmail());
         record.setTelephoneNumber(entity.getTelephoneNumber());
         record.setMembershipStatus(entity.getMembershipStatus());
-        return borrowerRepository.save(record);
+        borrowerRepository.save(record);
+        return ("Borrower has been updated Sucessfully");
     }
 
-    public BorrowerEntity deleteBorrower(Integer id){
-        Optional<BorrowerEntity> borrower = getBorrowerById(id);
-        BorrowerEntity record= borrower.get();
+    @Transactional 
+    public String suspend(Integer id){
+        Optional<BorrowerEntity> borrower= getBorrowerById(id);
+        if (borrower.isEmpty()){
+            throw new MissingInputException("Borrower does not exist");
+        }
+        BorrowerEntity record=borrower.get();
+        record.setMembershipStatus(MembershipStatus.Suspended);
+        return ("Borrower has been suspended");
+    }
+
+    @Transactional 
+    public String delete(Integer id){
+        Optional<BorrowerEntity> borrower= getBorrowerById(id);
+        if (borrower.isEmpty()){
+            throw new MissingInputException("Borrower does not exist");
+        }
+        BorrowerEntity record=borrower.get();
+        List<LoanEntity> loans = loanRepository.findByBorrowerId(record.getId());
+        if (loans !=null){
+            throw new BadInputException("A loan already exists for this book");
+        }
         borrowerRepository.delete(record);
-        return record;
+        return ("Borrower deleted");
+    }
+
+    @Transactional 
+     public String strictDelete(Integer id){
+        Optional<BorrowerEntity> borrower= getBorrowerById(id);
+        if (borrower.isEmpty()){
+            throw new MissingInputException("Borrower/Member does not exist");
+        }
+        BorrowerEntity record=borrower.get();
+        
+        List<LoanEntity> loans = loanRepository.findByBookId(record.getId());
+        for (LoanEntity loan : loans) {
+            if (loan.getBookId() == record.getId()){
+                loanRepository.delete(loan);
+                borrowerRepository.delete(record);
+            }
+            else{
+                throw new MissingInputException("No loans associated with this Borrower is found, use delete instead of strict delete");
+            }
+        }
+        return ("Borrowers and loans associated were deleted");
     }
 }

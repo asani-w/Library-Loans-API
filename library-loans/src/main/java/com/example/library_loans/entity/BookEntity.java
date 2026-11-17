@@ -23,7 +23,7 @@ public class BookEntity{
     private Integer id;
 
     @NotNull 
-    @Size(min=3,max=20, message = "Book Title must be between 3 and 20 characters")
+    @Size(min=2,max=500)
     private String title;
 
     public enum BookCategory{
@@ -106,6 +106,9 @@ public class BookEntity{
     @NotNull 
     @Enumerated (EnumType.STRING)
     private BookCondition bookCondition;
+
+    @NotNull 
+    @Size(min=2,max=50)
     private String bookAuthor;
 
     public BookEntity() {}

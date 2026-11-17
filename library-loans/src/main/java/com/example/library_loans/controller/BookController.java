@@ -93,19 +93,33 @@ public class BookController {
         return bookService.getBookByBookAuthor(author);
     }
     @PostMapping
-    public ResponseEntity<BookEntity> create(@Valid @RequestBody BookEntity book) {
-        BookEntity savedBook = bookService.createBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+    public ResponseEntity<String> create(@Valid @RequestBody BookEntity book) {
+        String message = bookService.createBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     
     @PutMapping("/{id}")
-    public BookEntity UpdateBook(@Valid @PathVariable Integer id, @RequestBody BookEntity entity) {
-        return bookService.updateBook(id, entity);
+    public ResponseEntity<String> UpdateBook(@Valid @PathVariable Integer id, @RequestBody BookEntity entity) {
+        String message = bookService.updateBook(id, entity);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @DeleteMapping("/{id}")
-    public BookEntity deleteBook(@PathVariable Integer id){
-        return bookService.deleteBook(id);
+    @PutMapping("/remove/{id}")
+    public ResponseEntity<String> removeBook(@PathVariable Integer id) {
+        String message = bookService.removeBook(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> strictDeleteBook(@PathVariable Integer id){
+        String message=bookService.strictDelete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+
+    }
+    @DeleteMapping("/strictDelete/{id}")
+    public ResponseEntity<String> deleteBook(@PathVariable Integer id){
+        String message= bookService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
     
     /*

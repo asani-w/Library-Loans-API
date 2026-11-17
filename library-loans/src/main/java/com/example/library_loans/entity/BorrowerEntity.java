@@ -2,6 +2,7 @@ package com.example.library_loans.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.*;
 
@@ -17,12 +18,16 @@ public class BorrowerEntity {
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     @NotNull 
+    @Size (min=2,max=30)
     private String firstName;
     @NotNull 
+    @Size (min=2,max=30)
     private String lastName;
     @NotNull 
+    @Size (min=5,max=200)
     private String email;
     @NotNull 
+    @Size (min=10,max=10)
     private String telephoneNumber;
 
     @CreationTimestamp 
@@ -36,12 +41,11 @@ public class BorrowerEntity {
         Suspended
     }
 
-
-
     @Enumerated(EnumType.STRING)
     @NotNull 
     private MembershipStatus membershipStatus;
 
+    @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     LocalDateTime expiryDate;
 
     public BorrowerEntity(){}
@@ -60,5 +64,5 @@ public class BorrowerEntity {
     public void setMembershipStatus(MembershipStatus membershipStatus){this.membershipStatus=membershipStatus;}
     public LocalDateTime getExpiryDate(){return expiryDate;}
     public void setExpiryDate(LocalDateTime expiryDate){this.expiryDate=expiryDate;}
-    
+
 }

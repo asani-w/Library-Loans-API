@@ -3,12 +3,13 @@ package com.example.library_loans.service;
 
 
 
+import com.example.library_loans.exception.GlobalExceptionHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -29,15 +30,17 @@ import jakarta.transaction.Transactional;
 @Service 
 public class LoanService {
 
+    private final GlobalExceptionHandler globalExceptionHandler;
     private final LoanRepository loanRepository;
     private final BookService bookService;
     private final BorrowerService borrowerService;
 
 
-    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService){
+    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService, GlobalExceptionHandler globalExceptionHandler){
         this.loanRepository=loanRepository;
         this.bookService=bookService;
         this.borrowerService=borrowerService;
+        this.globalExceptionHandler = globalExceptionHandler;
     }
 
 
@@ -50,7 +53,7 @@ public class LoanService {
     }
 
     @Transactional 
-    public LoanEntity createLoan(LoanEntity loan){
+    public String createLoan(LoanEntity loan){
         Integer bookId= loan.getBookId();
         Integer borrowerId=loan.getBorrowerId();
 
@@ -65,6 +68,8 @@ public class LoanService {
         BookEntity bookRecord = book.get();
         BorrowerEntity borrowerRecord = borrower.get();
 
+
+
         //book stuff
         if (bookRecord.getBookStatus() == BookStatus.Available & bookRecord.getBookCondition()!=BookCondition.Poor){
             bookRecord.setBookStatus(BookStatus.Borrowed);
@@ -73,7 +78,7 @@ public class LoanService {
             throw new BadInputException("Book Is already on a loan");
         }
         else if (bookRecord.getBookStatus()==BookStatus.Removed){
-            throw new BadInputException("Book is Removed for Catalog");
+            throw new BadInputException("Book is Removed from the Catalog");
         }
         else if(bookRecord.getBookStatus()==BookStatus.Reserved){
             throw new BadInputException("Book has been reserved, Cannot be loaned");
@@ -93,7 +98,8 @@ public class LoanService {
         loan.setDateDue(LocalDateTime.now().plusDays(7));
         loan.setLoanStatus(LoanStatus.Pending_Return);
         bookService.updateBook(bookId, bookRecord);
-        return loanRepository.save(loan); 
+        loanRepository.save(loan); 
+        return ("Loan has been created successfully");
     }
 
     public List<LoanEntity> getLoanByBookId(Integer bookId){
@@ -137,7 +143,7 @@ public class LoanService {
         return loanRepository.findByDateReturnedGreaterThanEqualAndDateReturnedLessThan(start, end);
     }
     @Transactional 
-    public LoanEntity update(Integer id, LoanEntity entity){
+    public String update(Integer id, LoanEntity entity){
 
         Optional<LoanEntity> loan = getLoanById(id);
         Optional<BookEntity> book = bookService.getBookById(entity.getBookId());
@@ -177,15 +183,37 @@ public class LoanService {
         }
 
         bookService.updateBook(bookRecord.getId(), bookRecord);
-        return loanRepository.save(record);
+        loanRepository.save(record);
+        return ("Loan has been updated Sucessfully");
     }
 
+     @Transactional 
+    public String unreturn(Integer id){
+        Optional<LoanEntity> loan= getLoanById(id);
+        Optional<BorrowerEntity> borrower= borrowerService.getBorrowerById(id);
 
-    public LoanEntity deleteLoan(Integer id){
+        if (loan.isEmpty()){
+            throw new MissingInputException("loan does not exist");
+        }
+        if (borrower.isEmpty()){
+            throw new MissingInputException("borroawe associated does not exist");
+        }
+        BorrowerEntity borrowerRecord=borrower.get();
+        LoanEntity record=loan.get();
+        record.setLoanStatus(LoanStatus.Unreturned);
+        borrowerService.suspend(borrowerRecord.getId());
+        loanRepository.save(record);
+        return ("Borrower has been suspended");
+    }
+
+    public String delete(Integer id){
         Optional<LoanEntity> loan = getLoanById(id);
+        if(loan.isEmpty()){
+            throw new MissingInputException("Loan Not Found");
+        }
         LoanEntity record=loan.get();
         loanRepository.delete(record);
-        return record;
+        return ("Loan Deleted successfully");
         
     }
 

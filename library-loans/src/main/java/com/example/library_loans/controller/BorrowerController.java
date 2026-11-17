@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,16 +87,29 @@ public class BorrowerController {
     }
 
     @PostMapping
-    public BorrowerEntity create(@RequestBody BorrowerEntity borrower){
-        return borrowerService.createBorrower(borrower);
+    public ResponseEntity<String> create(@Valid @RequestBody BorrowerEntity borrower){
+        String message= borrowerService.createBorrower(borrower);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     @PutMapping("/{id}")
-    public BorrowerEntity update(@Valid @PathVariable Integer id, @RequestBody BorrowerEntity entity ){
-        return borrowerService.update(id,entity);
+    public ResponseEntity<String> update(@Valid @PathVariable Integer id, @RequestBody BorrowerEntity entity ){
+        String message = borrowerService.update(id,entity);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-    @DeleteMapping ("/{id}")
-    public BorrowerEntity delete(@PathVariable Integer id){
-        return borrowerService.deleteBorrower(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> suspendBorrower(@Valid @PathVariable Integer id){
+        String message =borrowerService.suspend(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+    @DeleteMapping ("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Integer id){
+        String message =borrowerService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+    @DeleteMapping ("/strictDelete/{id}")
+    public ResponseEntity<String> strictDelete(@PathVariable Integer id){
+        String message= borrowerService.strictDelete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }
 
