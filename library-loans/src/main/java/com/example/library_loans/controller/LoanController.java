@@ -103,7 +103,7 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/unreturn/{id}")
     public ResponseEntity<String> unreturn(@PathVariable Integer id) {
         String message = loanService.unreturn(id);
         return ResponseEntity.status(HttpStatus.OK).body(message);

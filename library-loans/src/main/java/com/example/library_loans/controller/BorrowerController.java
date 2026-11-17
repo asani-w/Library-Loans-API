@@ -95,7 +95,7 @@ public class BorrowerController {
         String message = borrowerService.update(id,entity);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-    @PutMapping("/{id}")
+    @PutMapping("/suspend/{id}")
     public ResponseEntity<String> suspendBorrower(@Valid @PathVariable Integer id){
         String message =borrowerService.suspend(id);
         return ResponseEntity.status(HttpStatus.OK).body(message);

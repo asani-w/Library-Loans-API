@@ -26,7 +26,7 @@ public class BorrowerService {
     private final LoanRepository loanRepository;
 
 
-    public BorrowerService(BorrowerRepository borrowerRepository, LoanRepository loanRepository, BookRepository bookRepository, BorrowerController borrowerController){
+    public BorrowerService(BorrowerRepository borrowerRepository, LoanRepository loanRepository){
         this.borrowerRepository=borrowerRepository;
         this.loanRepository=loanRepository;
         
