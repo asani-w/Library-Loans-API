@@ -7,11 +7,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
-import com.example.library_loans.entity.BookEntity;
-import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.entity.LoanEntity;
@@ -24,8 +22,6 @@ import jakarta.transaction.Transactional;
 @Service 
 public class BorrowerService {
 
-    private final BorrowerController borrowerController;
-    private final BookRepository bookRepository;
     private final BorrowerRepository borrowerRepository;
     private final LoanRepository loanRepository;
 
@@ -33,8 +29,7 @@ public class BorrowerService {
     public BorrowerService(BorrowerRepository borrowerRepository, LoanRepository loanRepository, BookRepository bookRepository, BorrowerController borrowerController){
         this.borrowerRepository=borrowerRepository;
         this.loanRepository=loanRepository;
-        this.bookRepository = bookRepository;
-        this.borrowerController = borrowerController;
+        
     }
 
     public List<BorrowerEntity> getBorrowers(){
@@ -56,7 +51,7 @@ public class BorrowerService {
             throw new BadInputException("email does not contain @");
         }
         if (!(borrower.getEmail().length()>=5)&& !(borrower.getEmail().length()<=200)){
-            throw new BadInputException("email is not beteen 5 and 200 characters");
+            throw new BadInputException("email is not between 5 and 200 characters");
         }
         if (!(borrower.getTelephoneNumber().length() ==10)){
             throw new BadInputException("telephone number is greater than or less than 10 characters");

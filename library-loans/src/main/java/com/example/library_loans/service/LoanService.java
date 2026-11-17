@@ -3,13 +3,12 @@ package com.example.library_loans.service;
 
 
 
-import com.example.library_loans.exception.GlobalExceptionHandler;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -30,17 +29,15 @@ import jakarta.transaction.Transactional;
 @Service 
 public class LoanService {
 
-    private final GlobalExceptionHandler globalExceptionHandler;
     private final LoanRepository loanRepository;
     private final BookService bookService;
     private final BorrowerService borrowerService;
 
 
-    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService, GlobalExceptionHandler globalExceptionHandler){
+    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService ){
         this.loanRepository=loanRepository;
         this.bookService=bookService;
         this.borrowerService=borrowerService;
-        this.globalExceptionHandler = globalExceptionHandler;
     }
 
 
@@ -196,7 +193,7 @@ public class LoanService {
             throw new MissingInputException("loan does not exist");
         }
         if (borrower.isEmpty()){
-            throw new MissingInputException("borroawe associated does not exist");
+            throw new MissingInputException("borrower associated does not exist");
         }
         BorrowerEntity borrowerRecord=borrower.get();
         LoanEntity record=loan.get();

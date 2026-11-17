@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.LoanEntity.LoanStatus;
 
