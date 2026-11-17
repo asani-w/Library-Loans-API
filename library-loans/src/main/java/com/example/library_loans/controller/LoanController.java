@@ -7,9 +7,13 @@ import com.example.library_loans.service.LoanService;
 
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,17 +56,36 @@ public class LoanController {
         return loanService.getLoanByBorrowerId(id);
     }
 
-    /*
-    @GetMapping("/dateborrowed/{date}")
-    public List<LoanEntity> getLoanByDateBorrowed(date){
-        return loanService.getLoanByDateBorrwed(date);
+    
+    @GetMapping("/dateReturned/dateTime/{dateTime}")
+    public List<LoanEntity> getLoanByDateTimeReturned(@PathVariable LocalDateTime dateTime){
+        return loanService.getLoanByDateTimeReturned(dateTime);
     }
 
-    @GetMapping("/datedue/{date}")
-    public List<LoanEntity> getLoanByDateDue(date){
+    @GetMapping("/dateReturned/date/{date}")
+    public List<LoanEntity> getLoanByDateTimeReturned(@PathVariable String date){
+        return loanService.getLoanByDateReturned(date);
+    }
+
+    @GetMapping("/dateborrowed/dateTime/{dateTime}")
+    public List<LoanEntity> getLoanByDateTimeBorrowed(@PathVariable LocalDateTime dateTime){
+        return loanService.getLoanByDateTimeBorrowed(dateTime);
+    }
+
+    @GetMapping("/dateborrowed/date/{date}")
+    public List<LoanEntity> getLoanByDateBorrowed(@PathVariable LocalDateTime date){
+        return loanService.getLoanByDateTimeBorrowed(date);
+    }
+
+    @GetMapping("/datedue/dateTime/{dateTime}")
+    public List<LoanEntity> getLoanByDateTimeDue(@PathVariable LocalDateTime dateTime){
+        return loanService.getLoanByDateTimeDue(dateTime);
+    }
+    @GetMapping("/datedue/date/{date}")
+    public List<LoanEntity> getLoanByDateDue(@PathVariable String date){
         return loanService.getLoanByDateDue(date);
     }
-    */
+    
 
     @GetMapping("/LoanStatus/{status}")
     public List<LoanEntity> getLoanByMembership(@PathVariable LoanStatus loanStatus){
@@ -70,8 +93,9 @@ public class LoanController {
     }
 
     @PostMapping
-    public LoanEntity create(@RequestBody LoanEntity loan){
-        return loanService.createLoan(loan);
+    public ResponseEntity<LoanEntity> create(@RequestBody LoanEntity loan){
+        LoanEntity loanCreated=loanService.createLoan(loan);
+        return ResponseEntity.status(409).body(loanCreated);
     }
     
     @PutMapping("/{id}")

@@ -1,5 +1,7 @@
 package com.example.library_loans.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,15 +58,26 @@ public class BorrowerController {
     public List<BorrowerEntity>getBorrowerByTelephoneNumber(@PathVariable String tel){
         return borrowerService.getBorrowerByTelephoneNumber(tel);
     }
-    /*
-    also include date expired
+    
 
-    @GetMapping("/dateCreated/{date}")
-    public List<BorrowerEntity>getBorrowerByTitle(@PathVariable String title){
-        return borrowerService.getBorrowerByFirstName(title)
+    @GetMapping("/dateCreated/date/{date}")
+    public List<BorrowerEntity>getBorrowerByDateCreated(@PathVariable String date){
+        return borrowerService.getBorrowerByDateCreated(date);
+    }
+    @GetMapping("/dateCreated/dateTime/{dateTime}")
+    public List<BorrowerEntity>getBorrowerByDateTimeCreated(@PathVariable LocalDateTime dateTime){
+        return borrowerService.getBorrowerByDateTimeCreated(dateTime);
     }
 
-     */
+    @GetMapping("/dateExpired/date/{date}")
+    public List<BorrowerEntity>getBorrowerByDateExpired(@PathVariable String date){
+        return borrowerService.getBorrowerByDateExpired(date);
+    }
+
+    @GetMapping("/dateExpired/dateTime/{dateTime}")
+    public List<BorrowerEntity>getBorrowerByDateTimeExpired(@PathVariable LocalDateTime dateTime){
+        return borrowerService.getBorrowerByDateTimeExpired(dateTime);
+    }
 
     @GetMapping("/MembershipStatus/{status}")
     public List<BorrowerEntity> getBorrowerByMembershipStatus(@PathVariable MembershipStatus status){

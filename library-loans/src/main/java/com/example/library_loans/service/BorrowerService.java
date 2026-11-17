@@ -1,11 +1,13 @@
 package com.example.library_loans.service;
 
 import java.util.Optional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.library_loans.entity.BookEntity;
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.repository.BorrowerRepository;
@@ -54,15 +56,28 @@ public class BorrowerService {
         return borrowerRepository.findByTelephoneNumber(tel);
     }
 
-    public List<BorrowerEntity> getBorrowerByDateCreated(LocalDateTime date){
+    public List<BorrowerEntity> getBorrowerByDateTimeCreated(LocalDateTime date){
         return borrowerRepository.findByDateCreated(date);
     }
 
     public List<BorrowerEntity> getBorrowerByMembershipStatus(MembershipStatus membershipStatus){
         return borrowerRepository.findByMembershipStatus(membershipStatus);
     }
-    public List<BorrowerEntity>getBorrowerByDateExpired(LocalDateTime date){
+    public List<BorrowerEntity>getBorrowerByDateTimeExpired(LocalDateTime date){
         return borrowerRepository.findByExpiryDate(date);
+    }
+    public List<BorrowerEntity> getBorrowerByDateCreated(String date){
+        LocalDate day=LocalDate.parse(date);
+        LocalDateTime start= day.atStartOfDay();
+        LocalDateTime end=day.plusDays(1).atStartOfDay();
+        return borrowerRepository.findByDateCreatedGreaterThanEqualAndDateCreatedLessThan(start, end);
+    }
+
+    public List<BorrowerEntity> getBorrowerByDateExpired(String date){
+        LocalDate day=LocalDate.parse(date);
+        LocalDateTime start= day.atStartOfDay();
+        LocalDateTime end=day.plusDays(1).atStartOfDay();
+        return borrowerRepository.findByExpiryDateGreaterThanEqualAndExpiryDateLessThan(start, end);
     }
 
     public BorrowerEntity update(Integer id, BorrowerEntity entity){

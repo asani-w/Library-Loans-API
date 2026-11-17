@@ -1,6 +1,7 @@
 package com.example.library_loans.service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class BookService {
     public List<BookEntity> getBookByBookGenre(BookGenre bookGenre){
         return bookRepository.findByBookGenre(bookGenre);
     }
-    public List<BookEntity> getBookByDateAdded(LocalDateTime dateAdded){
+    public List<BookEntity> getBookByDateTimeAdded(LocalDateTime dateAdded){
         return bookRepository.findByDateAdded(dateAdded);
     }
     
@@ -89,7 +90,12 @@ public class BookService {
     public List<BookEntity> getBookByBookAuthor(String bookauthor){
         return bookRepository.findByBookAuthor(bookauthor);
     }
-
+    public List<BookEntity> getBookByDateAdded(String date){
+        LocalDate day=LocalDate.parse(date);
+        LocalDateTime start= day.atStartOfDay();
+        LocalDateTime end=day.plusDays(1).atStartOfDay();
+        return bookRepository.findByDateAddedGreaterThanEqualAndDateAddedLessThan(start,end);
+    }
     @Transactional 
     public BookEntity updateBook(Integer id, BookEntity entity){
         Optional<BookEntity> book = getBookById(id);
@@ -130,7 +136,7 @@ public class BookService {
         return booksSaved;
     }
          */
-        
+
     public BookEntity deleteBook(Integer id){
         Optional<BookEntity> book= getBookById(id);
         BookEntity record=book.get();

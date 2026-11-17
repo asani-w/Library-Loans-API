@@ -17,4 +17,7 @@ public interface BorrowerRepository extends JpaRepository<BorrowerEntity, Intege
     List<BorrowerEntity>findByDateCreated(LocalDateTime dateCreated);
     List<BorrowerEntity>findByMembershipStatus(MembershipStatus membershipStatus);
     List<BorrowerEntity>findByExpiryDate(LocalDateTime expiryDate);
+
+    List<BorrowerEntity>findByDateCreatedGreaterThanEqualAndDateCreatedLessThan(LocalDateTime start,LocalDateTime end);
+    List<BorrowerEntity>findByExpiryDateGreaterThanEqualAndExpiryDateLessThan(LocalDateTime start,LocalDateTime end);
 }

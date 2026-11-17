@@ -36,6 +36,9 @@ public class LoanEntity {
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LoanStatus loanStatus;
 
+    @Schema (accessMode = Schema.AccessMode.READ_ONLY)
+    private LocalDateTime dateReturned;
+
 
     public LoanEntity(){}
 
@@ -49,6 +52,8 @@ public class LoanEntity {
     public void setDateDue(LocalDateTime dateDue){this.dateDue=dateDue;}
     public LoanStatus getLoanStatus() {return loanStatus;}
     public void setLoanStatus(LoanStatus loanStatus){this.loanStatus=loanStatus;}
+    public LocalDateTime getDateReturned(){return dateReturned;}
+    public void setDateReturned(LocalDateTime dateReturned){this.dateReturned=dateReturned;}
 
     
         

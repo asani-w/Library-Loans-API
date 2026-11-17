@@ -3,6 +3,7 @@ package com.example.library_loans.service;
 
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -103,10 +104,10 @@ public class LoanService {
         return loanRepository.findByBorrowerId(borrowerId);
     }
 
-    public List<LoanEntity> getLoanByDateBorrowed(LocalDateTime dateBorrowed){
+    public List<LoanEntity> getLoanByDateTimeBorrowed(LocalDateTime dateBorrowed){
         return loanRepository.findByDateBorrowed(dateBorrowed);
     }
-    public List<LoanEntity> getLoanByDateDue(LocalDateTime dateDue){
+    public List<LoanEntity> getLoanByDateTimeDue(LocalDateTime dateDue){
         return loanRepository.findByDateDue(dateDue);
     }
 
@@ -114,6 +115,27 @@ public class LoanService {
         return loanRepository.findByLoanStatus(loanStatus);
     }
 
+    public List<LoanEntity> getLoanByDateTimeReturned(LocalDateTime dateReturned){
+        return loanRepository.findByDateReturned(dateReturned);
+    }
+    public List<LoanEntity> getLoanByDateBorrowed(String date){
+        LocalDate day=LocalDate.parse(date);
+        LocalDateTime start= day.atStartOfDay();
+        LocalDateTime end=day.plusDays(1).atStartOfDay();
+        return loanRepository.findByDateBorrowedGreaterThanEqualAndDateBorrowedLessThan(start,end);
+    }
+    public List<LoanEntity> getLoanByDateDue(String date){
+        LocalDate day=LocalDate.parse(date);
+        LocalDateTime start= day.atStartOfDay();
+        LocalDateTime end=day.plusDays(1).atStartOfDay();
+        return loanRepository.findByDateDueGreaterThanEqualAndDateDueLessThan(start,end);
+    }
+    public List<LoanEntity> getLoanByDateReturned(String date){
+        LocalDate day=LocalDate.parse(date);
+        LocalDateTime start= day.atStartOfDay();
+        LocalDateTime end=day.plusDays(1).atStartOfDay();
+        return loanRepository.findByDateReturnedGreaterThanEqualAndDateReturnedLessThan(start, end);
+    }
     @Transactional 
     public LoanEntity update(Integer id, LoanEntity entity){
 
@@ -164,8 +186,6 @@ public class LoanService {
         LoanEntity record=loan.get();
         loanRepository.delete(record);
         return record;
-        
-
         
     }
 
