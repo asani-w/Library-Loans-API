@@ -70,7 +70,7 @@ public class BorrowerService {
         borrower.setExpiryDate(LocalDateTime.now().plusMonths(6));
         }
 
-        if((borrowerRepository.findByFirstNameAndLastNameExists(borrower.getFirstName(), borrower.getLastName())) && borrowerRepository.findByEmailOrTelephoneNumberExists(borrower.getEmail(), borrower.getTelephoneNumber()) ){
+        if((borrowerRepository.existsByFirstNameAndLastName(borrower.getFirstName(), borrower.getLastName())) && borrowerRepository.existsByEmailOrTelephoneNumber(borrower.getEmail(), borrower.getTelephoneNumber()) ){
             throw new BadInputException("Borrower with the same name and Email/Telephone number exists already");
         }
 
