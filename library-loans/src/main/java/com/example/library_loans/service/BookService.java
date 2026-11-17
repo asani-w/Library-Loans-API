@@ -46,10 +46,10 @@ public class BookService {
     public String createBook(BookEntity book){
         
         
-        if(!(book.getTitle().length() <=3) || !(book.getTitle().length()>=500)){
+        if(!(book.getTitle().length() >=3) || !(book.getTitle().length()<=500)){
             throw new BadInputException("Book Title is less than 3 characters or greater than 500 characaters");
         }
-        if(!(book.getAuthor().length() <=3) || !(book.getAuthor().length()>=80)){
+        if(!(book.getAuthor().length() >=3) || !(book.getAuthor().length()<=80)){
             throw new BadInputException("Book Author is less than 3 characters or greater than 80 characaters");
         }
         if(bookRepository.existsByTitleAndBookAuthor(book.getTitle(), book.getAuthor())){

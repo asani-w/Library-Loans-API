@@ -101,6 +101,41 @@ public class LoanController {
     public ResponseEntity<String> update(@Valid @PathVariable Integer id, @RequestBody LoanEntity entity) {
         String message = loanService.update(id,entity);
         return ResponseEntity.status(HttpStatus.OK).body(message);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     }
 
     @PutMapping("/unreturn/{id}")
