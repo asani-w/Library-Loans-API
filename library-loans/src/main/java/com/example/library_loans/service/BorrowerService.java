@@ -41,28 +41,37 @@ public class BorrowerService {
     }
     @Transactional 
     public String createBorrower(BorrowerEntity borrower){
-        if(!(borrower.getFirstName().length()>=3) && !(borrower.getFirstName().length()<=30)){
+        if(!(borrower.getFirstName().length()>=3) || !(borrower.getFirstName().length()<=30)){
             throw new BadInputException("First name is not between 2 and 30 characters");
         }
-        if(!(borrower.getLastName().length()>=3) && !(borrower.getLastName().length()<=30)){
-            throw new BadInputException("First name is not between 2 and 30 characters");
+        if(!(borrower.getLastName().length()>=3) || !(borrower.getLastName().length()<=30)){
+            throw new BadInputException("Last name is not between 2 and 30 characters");
         }
         if (!(borrower.getEmail().contains("@"))){
             throw new BadInputException("email does not contain @");
         }
+        if (!(borrower.getEmail().endsWith(".com"))){
+            throw new BadInputException("email does end with .com");
+        }
         if (!(borrower.getEmail().length()>=5)&& !(borrower.getEmail().length()<=200)){
             throw new BadInputException("email is not between 5 and 200 characters");
         }
-        if (!(borrower.getTelephoneNumber().length() ==10)){
-            throw new BadInputException("telephone number is greater than or less than 10 characters");
-        }
+        
         if(borrower.getTelephoneNumber().contains("(")||borrower.getTelephoneNumber().contains(")")){
             throw new BadInputException("Telephone number contains ( )");
         }
         if(borrower.getTelephoneNumber().contains("+")){
             throw new BadInputException("Telephone number contains +");
         }
-
+        if ((borrower.getTelephoneNumber().length() >10)){
+            throw new BadInputException("Telephone number is greater 10 digits");
+        }
+        if ((borrower.getTelephoneNumber().length() <10)){
+            throw new BadInputException("Telephone number is less than 10 digits");
+        }
+        if (!(borrower.getTelephoneNumber().chars().allMatch(Character::isDigit) )){
+            throw new BadInputException("I dont think those are all digits...");
+        }
         if (borrower.getMembershipStatus()==MembershipStatus.Expired){
             borrower.setExpiryDate(LocalDateTime.now());
         }
@@ -70,8 +79,13 @@ public class BorrowerService {
         borrower.setExpiryDate(LocalDateTime.now().plusMonths(6));
         }
 
-        if((borrowerRepository.existsByFirstNameAndLastName(borrower.getFirstName(), borrower.getLastName())) && borrowerRepository.existsByEmailOrTelephoneNumber(borrower.getEmail(), borrower.getTelephoneNumber()) ){
-            throw new BadInputException("Borrower with the same name and Email/Telephone number exists already");
+        if((borrowerRepository.existsByFirstNameAndLastName(borrower.getFirstName(), borrower.getLastName())) ){
+            if( borrowerRepository.existsByEmail(borrower.getEmail())){
+                throw new BadInputException("Borrower with that Name and Email exists already");
+            }
+            else if(borrowerRepository.existsByTelephoneNumber(borrower.getTelephoneNumber())){
+                throw new BadInputException("Borrower with that Name and Telephone Number already exists");
+            }
         }
 
         borrowerRepository.save(borrower);

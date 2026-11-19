@@ -6,38 +6,41 @@ package com.example.library_loans.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-
-import com.example.library_loans.repository.LoanRepository;
 import com.example.library_loans.entity.BookEntity;
-import com.example.library_loans.entity.BorrowerEntity;
-import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.BookEntity.BookCondition;
 import com.example.library_loans.entity.BookEntity.BookStatus;
+import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
+import com.example.library_loans.entity.LoanEntity;
 import com.example.library_loans.entity.LoanEntity.LoanStatus;
 import com.example.library_loans.exception.BadInputException;
 import com.example.library_loans.exception.MissingInputException;
-
+import com.example.library_loans.repository.BookRepository;
+import com.example.library_loans.repository.LoanRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service 
 public class LoanService {
 
+    private final BookRepository bookRepository;
     private final LoanRepository loanRepository;
     private final BookService bookService;
     private final BorrowerService borrowerService;
 
 
-    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService ){
+    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService, BookRepository bookRepository ){
         this.loanRepository=loanRepository;
         this.bookService=bookService;
         this.borrowerService=borrowerService;
+        this.bookRepository = bookRepository;
     }
 
 
@@ -68,11 +71,18 @@ public class LoanService {
 
 
         //book stuff
-        if (bookRecord.getBookStatus() == BookStatus.Available & bookRecord.getBookCondition()!=BookCondition.Poor){
-            bookRecord.setBookStatus(BookStatus.Borrowed);
-        }
-        else if (bookRecord.getBookStatus()==BookStatus.Borrowed){
-            throw new BadInputException("Book Is already on a loan");
+        //make it soo updte does this check for book and sets it
+        
+        
+            
+        if (bookRecord.getBookStatus()==BookStatus.Borrowed ){
+            for (LoanEntity item : getLoanByBookId(loan.getBookId())) {
+                    if (item.getLoanStatus()==LoanStatus.Pending_Return && item.getBorrowerId()==loan.getBorrowerId()){
+                        throw new BadInputException("This book is already on loan by this user");
+                    }
+            throw new BadInputException("This book is already on loan by another user");
+                
+            }
         }
         else if (bookRecord.getBookStatus()==BookStatus.Removed){
             throw new BadInputException("Book is Removed from the Catalog");
@@ -80,10 +90,14 @@ public class LoanService {
         else if(bookRecord.getBookStatus()==BookStatus.Reserved){
             throw new BadInputException("Book has been reserved, Cannot be loaned");
         }
-        else{
+        else if(bookRecord.getBookCondition()==BookCondition.Poor){
             throw new BadInputException("Books of Poor Condition cannot be loaned");
         }
 
+        if (bookRecord.getBookStatus() == BookStatus.Available & bookRecord.getBookCondition()!=BookCondition.Poor){
+            bookRecord.setBookStatus(BookStatus.Borrowed);
+        }
+        
         //borrowerStuff
         if(borrowerRecord.getMembershipStatus() == MembershipStatus.Expired){
             throw new BadInputException("Borrower's Memebership Has been Expired");
@@ -94,8 +108,8 @@ public class LoanService {
 
         loan.setDateDue(LocalDateTime.now().plusDays(7));
         loan.setLoanStatus(LoanStatus.Pending_Return);
-        bookService.updateBook(bookId, bookRecord);
         loanRepository.save(loan); 
+        bookRepository.save(bookRecord);// changed it from bookRepository.updatebook to this fo fix the conflicts
         return ("Loan has been created successfully");
     }
 
@@ -184,6 +198,7 @@ public class LoanService {
         return ("Loan has been updated Sucessfully");
     }
 
+
      @Transactional 
     public String unreturn(Integer id){
         Optional<LoanEntity> loan= getLoanById(id);
@@ -202,7 +217,30 @@ public class LoanService {
         loanRepository.save(record);
         return ("Borrower has been suspended");
     }
+    public String loanReturn(Integer id){
+        Optional<LoanEntity> loan = getLoanById(id);
+        if (loan.isEmpty()){
+            throw new MissingInputException("Loan not found");
+        }
+        LoanEntity loanRecord = loan.get();
+        Optional <BookEntity> book = bookService.getBookById(loanRecord.getBookId());
+        if (book.isEmpty()){
+            throw new MissingInputException("Strange...Book not found how could this happen?");
+        }
+        BookEntity bookRecord =  book.get();
 
+        if (loanRecord.getLoanStatus()!=LoanStatus.Pending_Return){
+            throw new BadInputException("This book is already returned or marked as unreturned for this user...");
+        }
+
+        loanRecord.setDateReturned(LocalDateTime.now());
+        
+        bookRecord.setBookStatus(BookStatus.Available);
+        loanRecord.setLoanStatus(LoanStatus.Returned);
+        bookRepository.save(bookRecord);
+        loanRepository.save(loanRecord);
+        return("Book has been successfully returned. Return date marked as "+ loanRecord.getDateReturned().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+    }
     public String delete(Integer id){
         Optional<LoanEntity> loan = getLoanById(id);
         if(loan.isEmpty()){

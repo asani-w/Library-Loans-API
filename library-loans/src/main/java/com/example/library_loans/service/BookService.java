@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -147,10 +148,14 @@ public class BookService {
     @Transactional 
     public String updateBook(Integer id, BookEntity entity){
         Optional<BookEntity> book = getBookById(id);
+        if(book.isEmpty()){
+            throw new MissingInputException("Book does not exist");
+        }
+
         BookEntity record=book.get();
         
         List<LoanEntity> loan = loanRepository.findByBookId(entity.getId());
-
+        
         for (LoanEntity item : loan) {
             if(item.getLoanStatus()!=LoanStatus.Returned){
                 throw new BadInputException("Book is already on a Loan and cannot be updated unless returned");
@@ -162,14 +167,32 @@ public class BookService {
                 throw new MissingInputException("Loan Not Found");
             }
         }
-        
-        if(!(entity.getTitle().length() <=3) || !(entity.getTitle().length()>=500)){
+             
+
+
+/* 
+        record.setBookStatus(entity.getBookStatus());
+        if (record.getBookStatus() == BookStatus.Borrowed) {
+            int activeLoanCount = 0;
+            for (LoanEntity item : loan) {
+                if (Objects.equals(item.getBookId(), entity.getId())
+                        && item.getLoanStatus() != LoanStatus.Returned) {
+                    activeLoanCount += 1;
+                }
+            }
+
+            if (activeLoanCount > 0) {
+                throw new BadInputException("Bookz is on borrowed status, return the loan before it can be updated");
+            }
+        }
+*/
+        if(!(entity.getTitle().length() >=3) || !(entity.getTitle().length()<=500)){
             throw new BadInputException("Book Title is less than 3 characters or greater than 500 characaters");
         }
-        if(!(entity.getAuthor().length() <=3) || !(entity.getAuthor().length()>=80)){
+        if(!(entity.getAuthor().length() >=3) || !(entity.getAuthor().length()<=80)){
             throw new BadInputException("Book Author is less than 3 characters or greater than 80 characaters");
         }
-        if(bookRepository.existsByTitleAndBookAuthor(entity.getTitle(), entity.getAuthor())){
+        if((bookRepository.existsByTitleAndBookAuthor(entity.getTitle(), entity.getAuthor()) && (record.getId()==entity.getId()))){
             throw new BadInputException("Book With the Same Title and Same Author Already Exists");
         }
 
@@ -203,6 +226,7 @@ public class BookService {
         }
         BookEntity record=book.get();
         record.setBookStatus(BookStatus.Removed);
+        bookRepository.save(record);
         return ("book has been updateed to removed");
     }
 
@@ -214,7 +238,7 @@ public class BookService {
         }
         BookEntity record=book.get();
         List<LoanEntity> loans = loanRepository.findByBookId(record.getId());
-        if (loans !=null){
+        if (!(loans.isEmpty())){
             throw new BadInputException("A loan already exists for this book");
         }
         bookRepository.delete(record);

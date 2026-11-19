@@ -1,12 +1,5 @@
 package com.example.library_loans.controller;
 
-import com.example.library_loans.entity.LoanEntity;
-import com.example.library_loans.entity.LoanEntity.LoanStatus;
-import com.example.library_loans.service.BookService;
-import com.example.library_loans.service.LoanService;
-
-import jakarta.validation.Valid;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
+
+import com.example.library_loans.entity.LoanEntity;
+import com.example.library_loans.entity.LoanEntity.LoanStatus;
+import com.example.library_loans.service.BookService;
+import com.example.library_loans.service.LoanService;
 
 
 
@@ -92,50 +90,15 @@ public class LoanController {
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody LoanEntity loan){
+    public ResponseEntity<String> create( @RequestBody LoanEntity loan){
         String message =loanService.createLoan(loan);
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@Valid @PathVariable Integer id, @RequestBody LoanEntity entity) {
+    public ResponseEntity<String> update( @PathVariable Integer id, @RequestBody LoanEntity entity) {
         String message = loanService.update(id,entity);
         return ResponseEntity.status(HttpStatus.OK).body(message);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     }
 
     @PutMapping("/unreturn/{id}")
@@ -143,7 +106,11 @@ public class LoanController {
         String message = loanService.unreturn(id);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-
+    @PutMapping("/return/{id}")
+    public ResponseEntity<String> returnLoan(@PathVariable Integer id){
+        String message = loanService.loanReturn(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteLoan(@PathVariable Integer id){
         String message = loanService.delete(id);

@@ -21,5 +21,7 @@ public interface BorrowerRepository extends JpaRepository<BorrowerEntity, Intege
     List<BorrowerEntity>findByDateCreatedGreaterThanEqualAndDateCreatedLessThan(LocalDateTime start,LocalDateTime end);
     List<BorrowerEntity>findByExpiryDateGreaterThanEqualAndExpiryDateLessThan(LocalDateTime start,LocalDateTime end);
     boolean existsByFirstNameAndLastName(String fname,String lname);
-    boolean existsByEmailOrTelephoneNumber(String email,String Telephone);
+    boolean existsByEmailOrTelephoneNumber(String email,String telephone);
+    boolean existsByEmail(String email);
+    boolean existsByTelephoneNumber(String telephone);
 }

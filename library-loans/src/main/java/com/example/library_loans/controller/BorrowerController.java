@@ -11,16 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.service.BorrowerService;
-
-import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RequestMapping ("/api/Borrowers")
 @RestController 
@@ -86,17 +83,17 @@ public class BorrowerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody BorrowerEntity borrower){
+    public ResponseEntity<String> create( @RequestBody BorrowerEntity borrower){
         String message= borrowerService.createBorrower(borrower);
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@Valid @PathVariable Integer id, @RequestBody BorrowerEntity entity ){
+    public ResponseEntity<String> update( @PathVariable Integer id, @RequestBody BorrowerEntity entity ){
         String message = borrowerService.update(id,entity);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
     @PutMapping("/suspend/{id}")
-    public ResponseEntity<String> suspendBorrower(@Valid @PathVariable Integer id){
+    public ResponseEntity<String> suspendBorrower( @PathVariable Integer id){
         String message =borrowerService.suspend(id);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
