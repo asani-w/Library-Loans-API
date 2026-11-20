@@ -122,13 +122,13 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
     
-    /*
+
     //bulk adding books
     @PostMapping ("/bulk")
-    public ResponseEntity<List<BookEntity>>createBulk( @RequestBody List<BookEntity> books){
-        List<BookEntity> booksSaved=bookService.bulkCreate(books);
-        return ResponseEntity.status(HttpStatus.CREATED).body(booksSaved);
+    public ResponseEntity<String>createBulk( @RequestBody List<BookEntity> books){
+        String records=bookService.bulkCreate(books);
+        return ResponseEntity.status(HttpStatus.CREATED).body(records);
 
     }
-     */
+    
 }

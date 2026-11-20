@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BookEntity;
@@ -101,6 +102,7 @@ public class BookService {
             throw new BadInputException("Not a valid Condition");
         }
 */
+        book.setDateAdded(LocalDateTime.now());
         bookRepository.save(book);
         return("Book was created Successfully");
     }
@@ -205,17 +207,31 @@ public class BookService {
         return ("Book has been updated sucessfully");
 
     }
-    /*
-    @Valid 
-    public List<BookEntity> bulkCreate(List<BookEntity> books){
-        List<BookEntity> booksSaved= new ArrayList<>();
+
+    public String bulkCreate(List<BookEntity> books){
+        int errorCount=0;
+        int totalEntries=0;
+        String toSend="";
         for (BookEntity book : books) {
-            booksSaved.add(book);
-            
+            String response = createBook(book); 
+            totalEntries+=1;
+            if(response!="Book was created Successfully"){
+                errorCount+=1;
+            }  
         }
-        return booksSaved;
+
+        if((errorCount==0) && (totalEntries!=0)){
+            toSend=("All " + totalEntries +" books have been added");
+        }
+        else if(totalEntries==0){
+            toSend=("No Entries have been detected");
+        }
+        else{
+            toSend=("Only "+ Integer.toString(errorCount-totalEntries) +" books have been saved out of " + totalEntries + " total books");
+        }
+        return (toSend);
     }
-         */
+
 
 
     @Transactional 

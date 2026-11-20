@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.library_loans.entity.BookEntity;
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.service.BorrowerService;
@@ -107,5 +108,14 @@ public class BorrowerController {
         String message= borrowerService.strictDelete(id);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+     
+    //bulk adding borrowers
+    @PostMapping ("/bulk")
+    public ResponseEntity<String>createBulk( @RequestBody List<BorrowerEntity> borrowers){
+        String records=borrowerService.bulkCreate(borrowers);
+        return ResponseEntity.status(HttpStatus.CREATED).body(records);
+
+    }
+    
 }
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.library_loans.entity.BookEntity;
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.entity.LoanEntity;
@@ -217,5 +218,28 @@ public class BorrowerService {
             }
         }
         return ("Borrowers and loans associated were deleted");
+    }
+    public String bulkCreate(List<BorrowerEntity> borrowers){
+        int errorCount=0;
+        int totalEntries=0;
+        String toSend="";
+        for (BorrowerEntity borrower : borrowers) {
+            String response = createBorrower(borrower); 
+            totalEntries+=1;
+            if(response!="Borrower was created successfully"){
+                errorCount+=1;
+            }  
+        }
+
+        if((errorCount==0) && (totalEntries!=0)){
+            toSend=("All "+totalEntries+" Borrowers have been added");
+        }
+        else if(totalEntries==0){
+            toSend=("No Entries have been detected");
+        }
+        else{
+            toSend=("Only "+ Integer.toString(errorCount-totalEntries) +" borrowers have been saved out of " + totalEntries + " total borrowers");
+        }
+        return (toSend);
     }
 }

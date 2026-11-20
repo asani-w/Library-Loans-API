@@ -69,7 +69,7 @@ public class BookEntity{
     @Enumerated (EnumType.STRING)
     private BookGenre bookGenre;
 
-    @CreationTimestamp
+    
     @Column(updatable=false)
     @Schema (accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime dateAdded;
@@ -117,6 +117,7 @@ public class BookEntity{
     public String getTitle(){return title;}
     public void  setTitle(String title){ this.title=title;}
     public LocalDateTime getDateAdded(){return dateAdded;}
+    public void setDateAdded(LocalDateTime dateAdded){ this.dateAdded=dateAdded;}
     public BookSource getBookSource(){return bookSource;}
     public void setBookSource(BookSource bookSource){this.bookSource=bookSource;}
     public BookCondition getBookCondition(){return bookCondition;}
