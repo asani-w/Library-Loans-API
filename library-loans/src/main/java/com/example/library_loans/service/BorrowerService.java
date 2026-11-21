@@ -1,12 +1,10 @@
 package com.example.library_loans.service;
 
-import com.example.library_loans.controller.BorrowerController;
 import com.example.library_loans.repository.BookRepository;
-import java.util.Optional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -14,22 +12,28 @@ import com.example.library_loans.entity.BookEntity;
 import com.example.library_loans.entity.BorrowerEntity;
 import com.example.library_loans.entity.BorrowerEntity.MembershipStatus;
 import com.example.library_loans.entity.LoanEntity;
+import com.example.library_loans.entity.BookEntity.BookStatus;
 import com.example.library_loans.exception.BadInputException;
 import com.example.library_loans.exception.MissingInputException;
 import com.example.library_loans.repository.BorrowerRepository;
 import com.example.library_loans.repository.LoanRepository;
+
 import jakarta.transaction.Transactional;
 
 @Service 
 public class BorrowerService {
 
+    private final BookService bookService;
+    private final BookRepository bookRepository;
     private final BorrowerRepository borrowerRepository;
     private final LoanRepository loanRepository;
 
 
-    public BorrowerService(BorrowerRepository borrowerRepository, LoanRepository loanRepository){
+    public BorrowerService(BorrowerRepository borrowerRepository, LoanRepository loanRepository, BookRepository bookRepository, BookService bookService){
         this.borrowerRepository=borrowerRepository;
         this.loanRepository=loanRepository;
+        this.bookRepository = bookRepository;
+        this.bookService = bookService;
         
     }
 
@@ -192,7 +196,7 @@ public class BorrowerService {
         }
         BorrowerEntity record=borrower.get();
         List<LoanEntity> loans = loanRepository.findByBorrowerId(record.getId());
-        if (loans !=null){
+        if (!(loans.isEmpty())){
             throw new BadInputException("A loan already exists for this book");
         }
         borrowerRepository.delete(record);
@@ -200,23 +204,35 @@ public class BorrowerService {
     }
 
     @Transactional 
-     public String strictDelete(Integer id){
+    public String strictDelete(Integer id){
         Optional<BorrowerEntity> borrower= getBorrowerById(id);
         if (borrower.isEmpty()){
             throw new MissingInputException("Borrower/Member does not exist");
         }
         BorrowerEntity record=borrower.get();
         
-        List<LoanEntity> loans = loanRepository.findByBookId(record.getId());
+        List<LoanEntity> loans = loanRepository.findByBorrowerId(record.getId());
+        if(loans.isEmpty()){
+            throw new MissingInputException("No loans associated found");
+        }
         for (LoanEntity loan : loans) {
-            if (loan.getBookId() == record.getId()){
+            if (loan.getBorrowerId().equals(record.getId())){
+                
+
+                Optional<BookEntity> book = bookService.getBookById(loan.getBookId());
+                if (book.isEmpty()){
+                    throw new MissingInputException("Book not found");
+                }
+                BookEntity bookRecord = book.get();
+                bookRecord.setBookStatus(BookStatus.Available);
+                bookRepository.save(bookRecord);
                 loanRepository.delete(loan);
-                borrowerRepository.delete(record);
             }
             else{
                 throw new MissingInputException("No loans associated with this Borrower is found, use delete instead of strict delete");
             }
         }
+        borrowerRepository.delete(record);
         return ("Borrowers and loans associated were deleted");
     }
     public String bulkCreate(List<BorrowerEntity> borrowers){
