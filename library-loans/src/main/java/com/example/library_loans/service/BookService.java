@@ -5,10 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BookEntity;
@@ -197,10 +195,11 @@ public class BookService {
         if((bookRepository.existsByTitleAndBookAuthor(entity.getTitle(), entity.getAuthor()) && (record.getId()==entity.getId()))){
             throw new BadInputException("Book With the Same Title and Same Author Already Exists");
         }
-
+        record.setAuthor(entity.getAuthor());
         record.setTitle(entity.getTitle());
         record.setBookGenre(entity.getBookGenre());
         record.setBookCondition(entity.getBookCondition());
+        record.setBookStatus(entity.getBookStatus());
         record.setBookSource(entity.getBookSource());
         
         bookRepository.save(record);
@@ -269,15 +268,23 @@ public class BookService {
         }
         BookEntity record=book.get();
         List<LoanEntity> loans = loanRepository.findByBookId(record.getId());
+        if (record.getBookStatus()!=BookStatus.Borrowed){
+            throw new BadInputException("This book is not borrowed, please use Delete instead of Strict delete");
+        }
+        if (loans.isEmpty()){
+            throw new BadInputException("No loans exist for this book, if this book is marked as borrowed contact an admistrtor ");
+        }
+        
         for (LoanEntity loan : loans) {
             if (loan.getBookId() == record.getId()){
                 loanRepository.delete(loan);
-                bookRepository.delete(record);
+                
             }
             else{
                 throw new MissingInputException("No loans associated with this book is found, use deleteBook");
             }
         }
+        bookRepository.delete(record);
         return ("Books and loans associated were deleted");
     }
 

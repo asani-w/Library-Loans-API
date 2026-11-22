@@ -4,6 +4,7 @@ package com.example.library_loans.service;
 
 
 
+import com.example.library_loans.repository.BorrowerRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,17 +31,19 @@ import jakarta.transaction.Transactional;
 @Service 
 public class LoanService {
 
+    private final BorrowerRepository borrowerRepository;
     private final BookRepository bookRepository;
     private final LoanRepository loanRepository;
     private final BookService bookService;
     private final BorrowerService borrowerService;
 
 
-    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService, BookRepository bookRepository ){
+    public LoanService(LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService, BookRepository bookRepository, BorrowerRepository borrowerRepository ){
         this.loanRepository=loanRepository;
         this.bookService=bookService;
         this.borrowerService=borrowerService;
         this.bookRepository = bookRepository;
+        this.borrowerRepository = borrowerRepository;
     }
 
 
@@ -182,7 +185,7 @@ public class LoanService {
         if(record.getDateDue().isAfter(LocalDateTime.now())){
             record.setLoanStatus(LoanStatus.Unreturned);
         }
-        if (borrowerRecord.getExpiryDate().isAfter(LocalDateTime.now())){
+        if (borrowerRecord.getExpiryDate().isBefore(LocalDateTime.now())){
             borrowerRecord.setMembershipStatus(MembershipStatus.Expired);
         }
 
@@ -194,6 +197,8 @@ public class LoanService {
         }
 
         bookService.updateBook(bookRecord.getId(), bookRecord);
+        record.setBookId(entity.getBookId());
+        record.setBorrowerId(entity.getBorrowerId());
         loanRepository.save(record);
         return ("Loan has been updated Sucessfully");
     }
@@ -202,19 +207,22 @@ public class LoanService {
      @Transactional 
     public String unreturn(Integer id){
         Optional<LoanEntity> loan= getLoanById(id);
-        Optional<BorrowerEntity> borrower= borrowerService.getBorrowerById(id);
+        
 
         if (loan.isEmpty()){
             throw new MissingInputException("loan does not exist");
         }
+        LoanEntity record=loan.get();
+        Optional<BorrowerEntity> borrower= borrowerService.getBorrowerById(record.getBorrowerId());
         if (borrower.isEmpty()){
             throw new MissingInputException("borrower associated does not exist");
         }
         BorrowerEntity borrowerRecord=borrower.get();
-        LoanEntity record=loan.get();
+        
         record.setLoanStatus(LoanStatus.Unreturned);
         borrowerService.suspend(borrowerRecord.getId());
         loanRepository.save(record);
+        borrowerRepository.save(borrowerRecord);
         return ("Borrower has been suspended");
     }
     public String loanReturn(Integer id){
