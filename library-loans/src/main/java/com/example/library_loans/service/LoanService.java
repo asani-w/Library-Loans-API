@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.example.library_loans.entity.BookEntity;

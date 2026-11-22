@@ -58,7 +58,7 @@ public class BorrowerService {
         if (!(borrower.getEmail().endsWith(".com"))){
             throw new BadInputException("email does end with .com");
         }
-        if (!(borrower.getEmail().length()>=5)&& !(borrower.getEmail().length()<=200)){
+        if (!(borrower.getEmail().length()>=5)|| !(borrower.getEmail().length()<=200)){
             throw new BadInputException("email is not between 5 and 200 characters");
         }
         
@@ -140,18 +140,21 @@ public class BorrowerService {
 
     public String update(Integer id, BorrowerEntity entity){
         Optional<BorrowerEntity> borrower = getBorrowerById(id);
+        if (borrower.isEmpty()){
+            throw new MissingInputException("The borrower does not exist");
+        }
         BorrowerEntity record = borrower.get();
 
-        if(!(entity.getFirstName().length()>=3) && !(entity.getFirstName().length()<=30)){
+        if(!(entity.getFirstName().length()>=3) || !(entity.getFirstName().length()<=30)){
             throw new BadInputException("First name is not between 2 and 30 characters");
         }
-        if(!(entity.getLastName().length()>=3) && !(entity.getLastName().length()<=30)){
-            throw new BadInputException("First name is not between 2 and 30 characters");
+        if(!(entity.getLastName().length()>=3) || !(entity.getLastName().length()<=30)){
+            throw new BadInputException("Last name is not between 2 and 30 characters");
         }
         if (!(entity.getEmail().contains("@"))){
             throw new BadInputException("email does not contain @");
         }
-        if (!(entity.getEmail().length()>=5)&& !(entity.getEmail().length()<=200)){
+        if (!(entity.getEmail().length()>=5) || !(entity.getEmail().length()<=200)){
             throw new BadInputException("email is not beteen 5 and 200 characters");
         }
         if (!(entity.getTelephoneNumber().length() ==10)){
@@ -163,9 +166,15 @@ public class BorrowerService {
         if(entity.getTelephoneNumber().contains("+")){
             throw new BadInputException("Telephone number contains +");
         }
+        if(entity.getTelephoneNumber().contains(" ")){
+            throw new BadInputException("Telephone number contains space");
+        }
+        if(entity.getTelephoneNumber().contains("-")){
+            throw new BadInputException("Telephone number contains -");
+        }
 
         if (entity.getMembershipStatus()==MembershipStatus.Expired){
-            entity.setExpiryDate(LocalDateTime.now());
+            record.setExpiryDate(LocalDateTime.now());
         }
 
         record.setFirstName(entity.getFirstName());

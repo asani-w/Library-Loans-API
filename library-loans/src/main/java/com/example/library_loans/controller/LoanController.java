@@ -84,23 +84,25 @@ public class LoanController {
     }
     
 
-    @GetMapping("/LoanStatus/{status}")
+    @GetMapping("/LoanStatus/{loanStatus}")
     public List<LoanEntity> getLoanByMembership(@PathVariable LoanStatus loanStatus){
         return loanService.getLoanByLoanStatus(loanStatus);
     }
+
+    
 
     @PostMapping
     public ResponseEntity<String> create( @RequestBody LoanEntity loan){
         String message =loanService.createLoan(loan);
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
-    
+    /*
     @PutMapping("/{id}")
     public ResponseEntity<String> update( @PathVariable Integer id, @RequestBody LoanEntity entity) {
         String message = loanService.update(id,entity);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-
+    */
     @PutMapping("/unreturn/{id}")
     public ResponseEntity<String> unreturn(@PathVariable Integer id) {
         String message = loanService.unreturn(id);
